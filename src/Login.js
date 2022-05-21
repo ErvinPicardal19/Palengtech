@@ -28,12 +28,14 @@ let email = '';
 let pwd = '';
 
 const Login = (props) => {
+    //Hooks
     const [text, setText] = useState('');
     const [label, setLabel] = useState('Email');
     const [placeholder, setPlaceholder] = useState('email@gmail.com');
     const [buttonText, setButtonText] = useState('Next');
     const [loginState, setLoginState] = useState('email');
 
+    //Button Handler for Login
     const onPressHandler = () => {
         if (text.length > 3) {
             if (loginState === 'email') {
@@ -52,6 +54,7 @@ const Login = (props) => {
         }
     };
 
+    //Simulating Logging in
     const onLogin = () => {
         const user = userDatabase.find((u) => {
             if (email === u.email && pwd === u.pwd) {
@@ -74,7 +77,7 @@ const Login = (props) => {
         return;
     };
 
-
+    //Login Popup
     return (
         <Modal
             visible={props.showLogin}

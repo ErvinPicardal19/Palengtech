@@ -2,7 +2,6 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import {
@@ -18,11 +17,11 @@ import ShopScreen from './ShopScreen.js';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 const Tab = createMaterialBottomTabNavigator();
-// const Drawer = createDrawerNavigator();
+
 
 
 const App = () => {
@@ -34,6 +33,7 @@ const App = () => {
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
+
           tabBarIcon: ({ focused, size, color }) => {
             let iconName;
             if (route.name === 'Home') {
