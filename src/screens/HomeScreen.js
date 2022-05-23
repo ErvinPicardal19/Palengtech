@@ -12,7 +12,7 @@ import {
 export default function HomeScreen() {
     return (
         <View style={styles.body}>
-            <Text style={styles.text}>Home Screen</Text>
+            <Text style={styles.text}>HomeScreen</Text>
         </View>
     );
 }
