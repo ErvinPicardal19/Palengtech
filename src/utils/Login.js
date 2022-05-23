@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
@@ -19,6 +20,8 @@ import {
     ToastAndroid,
     Modal,
 } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import GlobalStyle from './GlobalStyle';
 
 const userDatabase = [
     { email: 'ervinjohnpicardal@gmail.com', pwd: 'September152000' },
@@ -64,6 +67,9 @@ const Login = (props) => {
         if (!user) {
             ToastAndroid.show('Incorrect Username or Password', ToastAndroid.LONG);
         } else {
+            props.setUsername(user.email);
+            props.setPassword(user.pwd);
+            props.setLogged_in(true);
             ToastAndroid.show(`Welcome ${user.email}`, ToastAndroid.LONG);
         }
         email = '';
@@ -91,7 +97,10 @@ const Login = (props) => {
             <View style={styles.center_modal}>
                 <View style={styles.warning_modal}>
                     <View style={styles.title_container}>
-                        <Text style={styles.title_text}>
+                        <Text style={
+                            [styles.title_text,
+                            GlobalStyle.CustomFont]
+                        }>
                             ACCOUNT LOGIN
                         </Text>
                     </View>
@@ -118,6 +127,37 @@ const Login = (props) => {
                                 {buttonText}
                             </Text>
                         </Pressable>
+                        <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Forgot Password?</Text>
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Pressable
+                            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                            style={({ pressed }) => [
+                                { backgroundColor: pressed ? '#FFA733' : '#EA8600' }
+                                , styles.google]}
+                            onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                        >
+                            <View style={styles.google_contents}>
+                                <FontAwesome5 name={'google'} style={{ marginRight: 15 }} size={17} />
+                                <Text style={styles.google_text}>
+                                    Login with Google
+                                </Text>
+                            </View>
+                        </Pressable>
+                        <Pressable
+                            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                            style={({ pressed }) => [
+                                { backgroundColor: pressed ? '#8b9dc3' : '#3b5998' }
+                                , styles.facebook]}
+                            onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                        >
+                            <View style={styles.facebook_contents}>
+                                <FontAwesome5 name={'facebook'} style={{ marginRight: 15 }} size={17} />
+                                <Text style={styles.facebook_text}>
+                                    Login with Google
+                                </Text>
+                            </View>
+                        </Pressable>
                     </View>
                 </View>
             </View>
@@ -142,15 +182,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 20,
         borderRadius: 25,
-
     },
     button_text: {
         color: '#ffffff',
         fontSize: 20,
+        fontFamily: 'Raleway-Regular',
     },
     warning_modal: {
         width: 300,
-        height: 350,
+        height: 450,
         backgroundColor: '#F5F5F5',
         borderRadius: 35,
     },
@@ -171,6 +211,42 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 35,
+        marginTop: 25,
+    },
+    google: {
+        width: 250,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        margin: 20,
+    },
+    google_contents: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    google_text: {
+        color: '#ffffff',
+        fontSize: 15,
+    },
+    facebook: {
+        width: 250,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+    },
+    facebook_contents: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    facebook_text: {
+        color: '#ffffff',
+        fontSize: 15,
     },
     center_modal: {
         flex: 1,

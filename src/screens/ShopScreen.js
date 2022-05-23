@@ -1,9 +1,9 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable eslint-comments/no-unused-disable */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import {
     StyleSheet,
@@ -12,12 +12,11 @@ import {
     Pressable,
     FlatList,
     RefreshControl,
+    ScrollView,
+    ImageBackground,
 } from 'react-native';
-import Login from './Login.js';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CheckoutScreen from './CheckoutScreen.js';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List.js';
 
 export default function ShopScreen() {
 
@@ -40,17 +39,10 @@ export default function ShopScreen() {
 
     //Pag Testing lang
     const [Ingredients, setIngredients] = useState([
-        { key: 1, item: 'Item 1' },
-        { key: 2, item: 'Item 2' },
-        { key: 3, item: 'Item 3' },
-        { key: 4, item: 'Item 4' },
-        { key: 5, item: 'Item 5' },
-        { key: 6, item: 'Item 6' },
-        { key: 7, item: 'Item 7' },
-        { key: 8, item: 'Item 8' },
-        { key: 44, item: 'Item 9' },
-        { key: 68, item: 'Item 27' },
-        { key: 0, item: 'Item 78' },
+        { key: 1, category: 'Poultry', src: 'https://www.kemin.com/content/dam/kft/food-technologies-asia-pacific/Shelf-Life-Extension-For-Meat-&-Poultry.jpg' },
+        { key: 2, category: 'Seafood', src: 'https://www.tasteofhome.com/wp-content/uploads/2018/08/shutterstock_96851353.jpg' },
+        { key: 3, category: 'Fruits', src: 'https://www.afproduce.com/wp-content/uploads/2018/08/fruits1.jpg' },
+        { key: 4, category: 'Vegetables', src: 'https://cdn.britannica.com/17/196817-050-6A15DAC3/vegetables.jpg' },
     ]);
 
     const onPressHandler = () => {
@@ -63,7 +55,7 @@ export default function ShopScreen() {
                 showCheckout={showCheckout}
                 setShowCheckout={setShowCheckout}
             />
-            <View style={{ width: 50, height: 40 }}>
+            <View style={{ width: 50, height: 40, backgroundColor: '#00000000' }}>
                 <FontAwesome5.Button
                     size={20}
                     name={'shopping-cart'}
@@ -73,31 +65,27 @@ export default function ShopScreen() {
                     onPress={onPressHandler}
                 />
             </View>
-            <ScrollView>
-                <View>
-                    <View style={styles.trending}>
-                        <Text style={styles.trendingText}>TRENDING</Text>
-                    </View>
-                    <FlatList
-                        backgroundColor={'#555'}
-                        horizontal
-                        keyExtractor={(item, index) => index.toString()}
-                        data={Items}
-                        renderItem={({ item }) => (
-                            <View style={styles.item}>
-                                <Text style={styles.text}>
-                                    {item.name}
-                                </Text>
-                            </View>
-                        )}
-                    />
-                </View>
+            <ScrollView
+                contentContainerStyle={{ paddingBottom: 40 }}
+                scrollEventThrottle={1000}
+            >
                 {
                     Ingredients.map((object) => {
                         return (
-                            <View style={styles.ingredient} key={object.key}>
-                                <Text style={styles.text}>{object.item}</Text>
-                            </View>
+                            <Pressable
+                                style={({ pressed }) => [
+                                    { opacity: pressed ? 0.5 : 1.0 }
+                                    , styles.ingredient_container]}
+                                key={object.key}>
+                                <ImageBackground
+                                    style={{ height: 200, width: '100%', justifyContent: 'center', alignItems: 'center' }}
+                                    source={{ uri: object.src }}
+                                >
+                                    <View style={styles.ingredient_label}>
+                                        <Text style={{ fontFamily: 'Raleway-Regular', fontSize: 50, color: '#D3F2C2' }}> {object.category} </Text>
+                                    </View>
+                                </ImageBackground>
+                            </Pressable>
                         );
                     })
                 }
@@ -111,30 +99,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: '#000000',
     },
-    checkout_container: {
-        backgroundColor: '#F5F5F5',
-        borderRadius: 35,
-    },
-    checkout_icon: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-    },
-    center_modal: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00000055',
-    },
     item: {
         margin: 10,
         backgroundColor: '#4BBBF2',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    ingredient: {
-        margin: 10,
-        backgroundColor: '#76AB5A',
+    ingredient_container: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    ingredient_label: {
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#00000077',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     trending: {
         flex: 1,

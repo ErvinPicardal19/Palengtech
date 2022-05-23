@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-trailing-spaces */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
+
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import {
@@ -10,10 +10,10 @@ import {
   View,
   Pressable,
 } from 'react-native';
-import Login from './Login.js';
-import HomeScreen from './HomeScreen.js';
-import ProfileScreen from './ProfileScreen.js';
-import ShopScreen from './ShopScreen.js';
+import HomeScreen from './screens/HomeScreen.js';
+import ProfileScreen from './screens/ProfileScreen.js';
+import ShopScreen from './screens/ShopScreen.js';
+import ChatScreen from './screens/ChatScreen.js';
 
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,13 +23,13 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 const Tab = createMaterialBottomTabNavigator();
 
 
-
 const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
         barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderColor: '#354D2955' }}
         activeColor="#76AB5A"
+        inactiveColor="#ffffff"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -40,10 +40,13 @@ const App = () => {
               iconName = 'house-user';
               size = focused ? 22 : 18;
               color = focused ? '#76AB5A' : '#555';
-
             } else if (route.name === 'Shop') {
               iconName = 'shopping-basket';
               size = focused ? 22 : 18;
+              color = focused ? '#76AB5A' : '#555';
+            } else if (route.name === 'Chat') {
+              iconName = 'comments';
+              size = focused ? 20 : 18;
               color = focused ? '#76AB5A' : '#555';
             } else if (route.name === 'Profile') {
               iconName = 'user';
@@ -64,11 +67,15 @@ const App = () => {
         <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ tabBarBadge: 3 }}
         />
         <Tab.Screen
           name="Shop"
           component={ShopScreen}
+        />
+        <Tab.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={{ tabBarBadge: 21 }}
         />
         <Tab.Screen
           name="Profile"
