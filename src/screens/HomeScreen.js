@@ -12,11 +12,7 @@ import {
 export default function HomeScreen() {
     return (
         <View style={styles.body}>
-<<<<<<< HEAD
-            <Text style={styles.text}>Cribbbss Screen</Text>
-=======
-            <Text style={styles.text}>Crib Screen</Text>
->>>>>>> ff41a35e694ad25c007c782873834ba05db3f60b
+            <Text style={styles.text}>Home Screen</Text>
         </View>
     );
 }
