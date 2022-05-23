@@ -39,7 +39,7 @@ const Login = (props) => {
     const [loginState, setLoginState] = useState('email');
 
     //Button Handler for Login
-    const onPressHandler = () => {
+    const setData = () => {
         if (text.length > 3) {
             if (loginState === 'email') {
                 email = text;
@@ -121,7 +121,7 @@ const Login = (props) => {
                             style={({ pressed }) => [
                                 { backgroundColor: pressed ? '#D3F2C2' : '#76AB5A' }
                                 , styles.button]}
-                            onPress={onPressHandler}
+                            onPress={setData}
                         >
                             <Text style={styles.button_text}>
                                 {buttonText}
