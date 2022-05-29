@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -10,55 +11,154 @@ import {
     Image,
 } from 'react-native';
 import Login from '../utils/Login.js';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import SQLite from 'react-native-sqlite-storage';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+// import { useSelector, useDispatch } from 'react-redux';
+// import { setEmail, setPassword } from '../redux/actions.js';
+
+const db = SQLite.openDatabase(
+    {
+        name: 'MainDB',
+        location: 'default',
+    },
+    () => { },
+    (error) => { console.log(error); }
+);
 
 export default function ProfileScreen() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+
+    // const { email, pwd } = useSelector(state => state.userReducer);
+    // const dispatch = useDispatch();
+
+    const [name, setName] = useState('');
+    const [profile, setProfile] = useState('');
     const [showLogin, setShowLogin] = useState(false);
     const [logged_in, setLogged_in] = useState(false);
 
-    const onPressHandler_login = () => {
+    useEffect(() => {
+        getData();
+    }, [logged_in]);
+
+    const createTable = () => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                'CREATE TABLE IF NOT EXISTS '
+                + 'Users '
+                + '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile TEXT);'
+            );
+        }
+        );
+    };
+
+    const setShowLoginHandler = () => {
         setShowLogin(!showLogin);
+    };
+
+    const getData = () => {
+        try {
+            db.transaction((tx) => {
+                tx.executeSql(
+                    'SELECT Name, Profile FROM Users',
+                    [],
+                    (_tx, results) => {
+                        console.log(results.rows.item(0));
+                        var len = results.rows.length;
+                        if (len > 0) {
+                            var userName = results.rows.item(0).Name;
+                            var profilePic = results.rows.item(0).Profile;
+                            console.log(userName, profilePic);
+                            setName(userName);
+                            setProfile(profilePic);
+                            setLogged_in(true);
+                            setShowLogin(false);
+                        } else {
+                            // setLogged_in(false);
+                            // setShowLogin(true);
+                        }
+                    }
+                );
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const logout = () => {
+        try {
+            db.transaction((tx) => {
+                tx.executeSql(
+                    'DROP TABLE Users;'
+                );
+                setLogged_in(false);
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
         <View style={styles.body}>
             <Login
                 showLogin={showLogin}
-                setShowLogin={setShowLogin}
-                username={username}
-                setUsername={setUsername}
-                logged_in={logged_in}
+                setShowLoginHandler={setShowLoginHandler}
                 setLogged_in={setLogged_in}
-                password={password}
-                setPassword={setPassword}
+                setName={setName}
+                setProfile={setProfile}
             />
-            <Text style={styles.text}>Profile</Text>
-            {
-                logged_in ?
-                    <Image
-                        style={{ height: 200, width: 200, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000000', borderRadius: 100 }}
-                        source={{ uri: 'https://mb.com.ph/wp-content/uploads/2020/11/Robin-Padilla.png' }}
-                    />
-                    :
-                    null
-            }
-            {
-                logged_in ?
-                    <View>
-                        <Text> {username} </Text>
-                    </View>
-                    :
-                    <Pressable
-                        hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-                        style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#D3F2C2' : '#76AB5A' }
-                            , styles.button]}
-                        onPress={onPressHandler_login}
+            <View style={styles.profileContainer}>
+                {
+                    logged_in ?
+                        <Image
+                            style={styles.profile}
+                            source={profile}
+                        />
+                        :
+                        <Image
+                            style={styles.profile}
+                            source={require('../../assets/DefaultProfile.png')}
+                        />
+                }
+                <View style={styles.profileName}>
+                    <Text
+                        style={{ color: '#000000', fontWeight: 'bold', fontSize: 20 }}
                     >
-                        <Text style={styles.text}> LOGIN </Text>
-                    </Pressable>
-            }
+                        Ervin Picardal
+                    </Text>
+                    <Text style={styles.username}>@EJPicardal</Text>
+                </View>
+            </View>
+            <View>
+                <View style={styles.Icons}>
+                    <View>
+                        <FontAwesome5
+                            size={15}
+                            style={styles.location}
+                            name={'map-marked'}
+                        />
+                    </View>
+                    <View>
+                        <FontAwesome5
+                            size={15}
+                            style={styles.location}
+                            name={'phone'}
+                        />
+                    </View>
+                    <View>
+                        <FontAwesome5
+                            size={15}
+                            style={styles.location}
+                            name={'envelope'}
+                        />
+                    </View>
+                </View>
+                <View>
+                    <Text>Antipolo City</Text>
+                    <Text>+09063776319</Text>
+                    <Text>ervinjohnpicardal@gmail.com</Text>
+                </View>
+            </View>
         </View>
     );
 }
@@ -67,8 +167,6 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: '#ffffff',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     input: {
         width: 250,
@@ -96,5 +194,29 @@ const styles = StyleSheet.create({
         color: '#354D29',
         margin: 10,
         fontSize: 20,
+    },
+    profileContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginLeft: 40,
+        marginTop: 50,
+    },
+    profile: {
+        width: 90,
+        height: 90,
+    },
+    profileName: {
+        marginLeft: 20,
+        marginTop: 20,
+    },
+    username: {
+        fontSize: 11,
+    },
+    Icons: {
+        width: '100%',
+        height: 150,
+        marginLeft: 50,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
     },
 });

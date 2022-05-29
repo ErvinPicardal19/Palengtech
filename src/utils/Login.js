@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 /* eslint-disable eol-last */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     StyleSheet,
     Text,
@@ -22,13 +22,31 @@ import {
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import GlobalStyle from './GlobalStyle';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import SQLite from 'react-native-sqlite-storage';
+
+// import {  setEmail, setPassword } from '../redux/actions.js';
+
+const db = SQLite.openDatabase(
+    {
+        name: 'MainDB',
+        location: 'default',
+    },
+    () => { },
+    (error) => { console.log(error); }
+);
 
 const userDatabase = [
-    { email: 'ervinjohnpicardal@gmail.com', pwd: 'September152000' },
+    {
+        email: 'ervinjohnpicardal@gmail.com',
+        pwd: 'September152000',
+        name: 'Ervin Picardal',
+        Img: 'https://mb.com.ph/wp-content/uploads/2020/11/Robin-Padilla.png',
+    },
 ];
 
 let email = '';
-let pwd = '';
+let pass = '';
 
 const Login = (props) => {
     //Hooks
@@ -38,49 +56,70 @@ const Login = (props) => {
     const [buttonText, setButtonText] = useState('Next');
     const [loginState, setLoginState] = useState('email');
 
+    useEffect(() => {
+        createTable();
+    }, []);
+
+    const createTable = () => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                'CREATE TABLE IF NOT EXISTS '
+                + 'Users '
+                + '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile TEXT);'
+            );
+        }
+        );
+    };
+
     //Button Handler for Login
     const setData = () => {
-        if (text.length > 3) {
-            if (loginState === 'email') {
-                email = text;
-                setLabel('Password');
-                setPlaceholder('password');
-                setButtonText('Login');
-                setText('');
-                setLoginState('password');
-            } else if (loginState === 'password') {
-                pwd = text;
-                onLogin();
-            }
-        } else {
-            ToastAndroid.show('Too Short!', ToastAndroid.LONG);
+        if (loginState === 'email') {
+            email = text;
+            setLabel('Password');
+            setPlaceholder('password');
+            setButtonText('Login');
+            setLoginState('password');
+        } else if (loginState === 'password') {
+            pass = text;
+            onLogin();
         }
     };
 
     //Simulating Logging in
-    const onLogin = () => {
+    const onLogin = async () => {
+        console.log(`Email:${email}\tPassword:${pass}`);
         const user = userDatabase.find((u) => {
-            if (email === u.email && pwd === u.pwd) {
+            if (email === u.email && pass === u.pwd) {
                 return u;
             }
         });
+        console.log(user);
         if (!user) {
             ToastAndroid.show('Incorrect Username or Password', ToastAndroid.LONG);
         } else {
-            props.setUsername(user.email);
-            props.setPassword(user.pwd);
+            try {
+                props.setName(user.name);
+                props.setProfile(user.Img);
+
+                await db.transaction(async (tx) => {
+                    await tx.executeSql(
+                        'INSERT INTO Users (Name, Profile) VALUES (?,?)', [user.name, user.Img]
+                    );
+                });
+
+                console.log('User have logged in');
+            } catch (err) {
+                console.log(err);
+            }
             props.setLogged_in(true);
-            ToastAndroid.show(`Welcome ${user.email}`, ToastAndroid.LONG);
         }
-        email = '';
-        pwd = '';
         setLabel('Email');
         setPlaceholder('email@gmail.com');
         setButtonText('Next');
-        setText('');
+        email = '';
+        pass = '';
         setLoginState('email');
-        props.setShowLogin(false);
-        return;
+        props.setShowLoginHandler(false);
     };
 
     //Login Popup
@@ -89,7 +128,7 @@ const Login = (props) => {
             visible={props.showLogin}
             transparent={true}
             onRequestClose={() => {
-                props.setShowLogin(false);
+                props.setShowLoginHandler(false);
                 onLogin();
             }}
             animationType="fade"
@@ -128,6 +167,7 @@ const Login = (props) => {
                             </Text>
                         </Pressable>
                         <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Forgot Password?</Text>
+                        <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Create Account</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Pressable
