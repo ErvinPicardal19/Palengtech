@@ -154,8 +154,8 @@ export default function ProfileScreen() {
                     </View>
                 </View>
                 <View>
-                    <Text>Antipolo City</Text>
-                    <Text>+09063776319</Text>
+                    <Text>Bahay ni arnauld</Text>
+                    <Text>+1231231</Text>
                     <Text>ervinjohnpicardal@gmail.com</Text>
                 </View>
             </View>
