@@ -39,9 +39,12 @@ const db = SQLite.openDatabase(
 const userDatabase = [
     {
         email: 'ervinjohnpicardal@gmail.com',
+        username: '@EJPIcardal',
         pwd: 'September152000',
         name: 'Ervin Picardal',
-        Img: 'https://mb.com.ph/wp-content/uploads/2020/11/Robin-Padilla.png',
+        img: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/279971547_5509998139018918_2121235480071672192_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=9m_DXtIy4XoAX9UER5W&tn=-MVmxUUVn3gJ6oLu&_nc_ht=scontent.fmnl9-1.fna&oh=00_AT9OanbqQpTrir6Qay-8Feane6dfx2owd5u5XvnArHwKag&oe=6299C20D',
+        phone: 9063776319,
+        location: 'Antipolo City',
     },
 ];
 
@@ -58,14 +61,12 @@ const Login = (props) => {
 
     useEffect(() => {
         createTable();
-    }, []);
+    }, [props.showLogin]);
 
     const createTable = () => {
         db.transaction((tx) => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS '
-                + 'Users '
-                + '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile TEXT);'
+                'CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile BLOB, Email TEXT, Username Text, Phone INTEGER, Location TEXT);'
             );
         }
         );
@@ -98,12 +99,17 @@ const Login = (props) => {
             ToastAndroid.show('Incorrect Username or Password', ToastAndroid.LONG);
         } else {
             try {
-                props.setName(user.name);
-                props.setProfile(user.Img);
-
+                props.setUser({
+                    name: user.name,
+                    profile: user.img,
+                    username: user.username,
+                    email: user.email,
+                    phone: user.phone,
+                    location: user.location,
+                });
                 await db.transaction(async (tx) => {
                     await tx.executeSql(
-                        'INSERT INTO Users (Name, Profile) VALUES (?,?)', [user.name, user.Img]
+                        "INSERT INTO Users (Name, Profile, Email, Username, Phone, Location) VALUES ('" + user.name + "','" + user.img + "','" + user.email + "','" + user.username + "'," + user.phone + ",'" + user.location + "');"
                     );
                 });
 

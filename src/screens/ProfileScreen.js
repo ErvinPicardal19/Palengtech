@@ -9,11 +9,13 @@ import {
     View,
     Pressable,
     Image,
+    ToastAndroid,
 } from 'react-native';
 import Login from '../utils/Login.js';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { ScrollView } from 'react-native-gesture-handler';
 
 // import { useSelector, useDispatch } from 'react-redux';
 // import { setEmail, setPassword } from '../redux/actions.js';
@@ -32,21 +34,27 @@ export default function ProfileScreen() {
     // const { email, pwd } = useSelector(state => state.userReducer);
     // const dispatch = useDispatch();
 
-    const [name, setName] = useState('');
-    const [profile, setProfile] = useState('');
+
+    const [User, setUser] = useState({
+        name: '',
+        profile: '',
+        username: '',
+        email: '',
+        phone: null,
+        location: '',
+    });
     const [showLogin, setShowLogin] = useState(false);
     const [logged_in, setLogged_in] = useState(false);
 
     useEffect(() => {
+        createTable();
         getData();
-    }, [logged_in]);
+    }, []);
 
     const createTable = () => {
         db.transaction((tx) => {
             tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS '
-                + 'Users '
-                + '(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile TEXT);'
+                'CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile BLOB, Email TEXT, Username Text, Phone INTEGER, Location TEXT);'
             );
         }
         );
@@ -60,22 +68,33 @@ export default function ProfileScreen() {
         try {
             db.transaction((tx) => {
                 tx.executeSql(
-                    'SELECT Name, Profile FROM Users',
+                    'SELECT Name, Profile, Email, Username, Phone, Location FROM Users',
                     [],
                     (_tx, results) => {
                         console.log(results.rows.item(0));
                         var len = results.rows.length;
                         if (len > 0) {
-                            var userName = results.rows.item(0).Name;
+                            var myName = results.rows.item(0).Name;
                             var profilePic = results.rows.item(0).Profile;
-                            console.log(userName, profilePic);
-                            setName(userName);
-                            setProfile(profilePic);
+                            var userName = results.rows.item(0).Username;
+                            var myEmail = results.rows.item(0).Email;
+                            var phoneNum = results.rows.item(0).Phone;
+                            var myLocation = results.rows.item(0).Location;
+
+                            console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
+                            setUser({
+                                name: myName,
+                                profile: profilePic,
+                                username: userName,
+                                email: myEmail,
+                                phone: phoneNum,
+                                location: myLocation,
+                            });
                             setLogged_in(true);
                             setShowLogin(false);
                         } else {
-                            // setLogged_in(false);
-                            // setShowLogin(true);
+                            setLogged_in(false);
+                            setShowLogin(true);
                         }
                     }
                 );
@@ -91,7 +110,16 @@ export default function ProfileScreen() {
                 tx.executeSql(
                     'DROP TABLE Users;'
                 );
+                setUser({
+                    name: '',
+                    profile: null,
+                    username: '',
+                    email: '',
+                    phone: null,
+                    location: '',
+                });
                 setLogged_in(false);
+                ToastAndroid.show('Logged out successfully', ToastAndroid.LONG);
             });
         } catch (err) {
             console.log(err);
@@ -104,60 +132,172 @@ export default function ProfileScreen() {
                 showLogin={showLogin}
                 setShowLoginHandler={setShowLoginHandler}
                 setLogged_in={setLogged_in}
-                setName={setName}
-                setProfile={setProfile}
+                setUser={setUser}
+                logged_in={logged_in}
             />
             <View style={styles.profileContainer}>
-                {
-                    logged_in ?
-                        <Image
-                            style={styles.profile}
-                            source={profile}
-                        />
-                        :
-                        <Image
-                            style={styles.profile}
-                            source={require('../../assets/DefaultProfile.png')}
-                        />
-                }
+                <Image
+                    style={styles.profile}
+                    source={logged_in ? { uri: User.profile } : require('../../assets/DefaultProfile.png')}
+                />
                 <View style={styles.profileName}>
                     <Text
-                        style={{ color: '#000000', fontWeight: 'bold', fontSize: 20 }}
+                        style={{ color: '#000000', fontSize: 20, fontFamily: 'Raleway-SemiBold' }}
                     >
-                        Ervin Picardal
+                        {User.name}
                     </Text>
-                    <Text style={styles.username}>@EJPicardal</Text>
+                    <Text style={styles.username}>{User.username}</Text>
                 </View>
             </View>
             <View>
                 <View style={styles.Icons}>
-                    <View>
+                    <View style={styles.label}>
                         <FontAwesome5
                             size={15}
-                            style={styles.location}
+                            style={styles.iconSize}
                             name={'map-marked'}
                         />
+                        <Text style={styles.labelText}>{User.location}</Text>
                     </View>
-                    <View>
+                    <View style={styles.label}>
                         <FontAwesome5
                             size={15}
-                            style={styles.location}
+                            style={styles.iconSize}
                             name={'phone'}
                         />
+                        <Text style={styles.labelText}>
+                            {logged_in ? `+63${User.phone}` : null}
+                        </Text>
                     </View>
-                    <View>
+                    <View style={styles.label}>
                         <FontAwesome5
                             size={15}
-                            style={styles.location}
+                            style={styles.iconSize}
                             name={'envelope'}
                         />
+                        <Text style={styles.labelText}>{User.email}</Text>
                     </View>
                 </View>
-                <View>
-                    <Text>Antipolo City</Text>
-                    <Text>+09063776319</Text>
-                    <Text>ervinjohnpicardal@gmail.com</Text>
+            </View>
+            <View style={styles.transactionView}>
+                <View style={styles.transactionContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
+                        {logged_in ? '₱150' : '₱0'}
+                    </Text>
+                    <Text style={{ fontSize: 12, color: '#596F62' }}>
+                        Wallet
+                    </Text>
                 </View>
+                <View style={styles.transactionContainer}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
+                        {logged_in ? '12' : '0'}
+                    </Text>
+                    <Text style={{ fontSize: 12, color: '#596F62' }}>
+                        Orders
+                    </Text>
+                </View>
+            </View>
+            <View style={styles.settings}>
+                <ScrollView>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={'heart'}
+                            />
+                            <Text style={styles.settings_contents_text}>Your Favorites</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={'credit-card'}
+                            />
+                            <Text style={styles.settings_contents_text}>Payments</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={'share'}
+                            />
+                            <Text style={styles.settings_contents_text}>Tell Your Friend</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={'user-check'}
+                            />
+                            <Text style={styles.settings_contents_text}>Support</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={'cog'}
+                            />
+                            <Text style={styles.settings_contents_text}>Settings</Text>
+                        </View>
+                    </Pressable>
+                    <Pressable
+                        style={({ pressed }) => [
+                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            , styles.settings_contents]}
+                        onPress={logged_in ? logout : setShowLoginHandler}
+                    >
+                        <View style={styles.settings_contents}>
+                            <FontAwesome5
+                                color={'#FF5714'}
+                                size={18}
+                                style={styles.settings_contents_margin}
+                                name={logged_in ? 'sign-out-alt' : 'sign-in-alt'}
+                            />
+                            <Text style={styles.settings_contents_text}>
+                                {logged_in ? 'Logout' : 'Login'}
+                            </Text>
+                        </View>
+                    </Pressable>
+                </ScrollView>
             </View>
         </View>
     );
@@ -202,21 +342,63 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     profile: {
-        width: 90,
-        height: 90,
+        width: 100,
+        height: 100,
+        borderRadius: 80,
     },
     profileName: {
         marginLeft: 20,
         marginTop: 20,
     },
     username: {
+        marginTop: 5,
         fontSize: 11,
+        fontFamily: 'Raleway-Light',
     },
     Icons: {
+        marginTop: 20,
         width: '100%',
-        height: 150,
+        height: 100,
         marginLeft: 50,
         flexDirection: 'column',
-        justifyContent: 'space-evenly',
+    },
+    label: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    labelText: {
+        fontSize: 12,
+        marginLeft: 9,
+        fontFamily: 'Raleway-Thin',
+    },
+    transactionView: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    transactionContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#596F62',
+    },
+    settings: {
+        flex: 2,
+    },
+    settings_contents: {
+        height: 70,
+        width: '100%',
+        flexDirection: 'row',
+    },
+    settings_contents_margin: {
+        marginTop: 20,
+        marginLeft: 20,
+        height: 30,
+        width: 30,
+    },
+    settings_contents_text: {
+        marginTop: 20,
+        fontFamily: 'Raleway-Medium',
+        marginLeft: 10,
     },
 });
