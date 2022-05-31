@@ -11,7 +11,7 @@ import {
     Image,
     ToastAndroid,
 } from 'react-native';
-import Login from '../utils/Login.js';
+import Login from '../../utils/Login.js';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -29,7 +29,7 @@ const db = SQLite.openDatabase(
     (error) => { console.log(error); }
 );
 
-export default function ProfileScreen() {
+export default function ProfileStack({ navigation }) {
 
     // const { email, pwd } = useSelector(state => state.userReducer);
     // const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
     useEffect(() => {
         createTable();
         getData();
-    }, []);
+    }, [logged_in]);
 
     const createTable = () => {
         db.transaction((tx) => {
@@ -81,7 +81,7 @@ export default function ProfileScreen() {
                             var phoneNum = results.rows.item(0).Phone;
                             var myLocation = results.rows.item(0).Location;
 
-                            console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
+                            // console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
                             setUser({
                                 name: myName,
                                 profile: profilePic,
@@ -126,6 +126,10 @@ export default function ProfileScreen() {
         }
     };
 
+    const favoritesHandler = () => {
+        navigation.navigate('Favorites');
+    };
+
     return (
         <View style={styles.body}>
             <Login
@@ -135,47 +139,52 @@ export default function ProfileScreen() {
                 setUser={setUser}
                 logged_in={logged_in}
             />
-            <View style={styles.profileContainer}>
-                <Image
-                    style={styles.profile}
-                    source={logged_in ? { uri: User.profile } : require('../../assets/DefaultProfile.png')}
-                />
-                <View style={styles.profileName}>
-                    <Text
-                        style={{ color: '#000000', fontSize: 20, fontFamily: 'Raleway-SemiBold' }}
-                    >
-                        {User.name}
-                    </Text>
-                    <Text style={styles.username}>{User.username}</Text>
-                </View>
-            </View>
-            <View>
-                <View style={styles.Icons}>
-                    <View style={styles.label}>
-                        <FontAwesome5
-                            size={15}
-                            style={styles.iconSize}
-                            name={'map-marked'}
-                        />
-                        <Text style={styles.labelText}>{User.location}</Text>
-                    </View>
-                    <View style={styles.label}>
-                        <FontAwesome5
-                            size={15}
-                            style={styles.iconSize}
-                            name={'phone'}
-                        />
-                        <Text style={styles.labelText}>
-                            {logged_in ? `+63${User.phone}` : null}
+            <View style={{ backgroundColor: '#D3F2C2' }}>
+                <View style={styles.profileContainer}>
+                    <Image
+                        style={styles.profile}
+                        source={logged_in ? { uri: User.profile } : require('../../../assets/DefaultProfile.png')}
+                    />
+                    <View style={styles.profileName}>
+                        <Text
+                            style={{ color: '#2E4323', fontSize: 20, fontFamily: 'Raleway-SemiBold' }}
+                        >
+                            {User.name}
                         </Text>
+                        <Text style={styles.username}>{User.username}</Text>
                     </View>
-                    <View style={styles.label}>
-                        <FontAwesome5
-                            size={15}
-                            style={styles.iconSize}
-                            name={'envelope'}
-                        />
-                        <Text style={styles.labelText}>{User.email}</Text>
+                </View>
+                <View>
+                    <View style={styles.Icons}>
+                        <View style={styles.label}>
+                            <FontAwesome5
+                                size={15}
+                                color={'#354D29'}
+                                style={styles.iconSize}
+                                name={'map-marked'}
+                            />
+                            <Text style={styles.labelText}>{User.location}</Text>
+                        </View>
+                        <View style={styles.label}>
+                            <FontAwesome5
+                                size={15}
+                                color={'#354D29'}
+                                style={styles.iconSize}
+                                name={'phone'}
+                            />
+                            <Text style={styles.labelText}>
+                                {logged_in ? `+63${User.phone}` : null}
+                            </Text>
+                        </View>
+                        <View style={styles.label}>
+                            <FontAwesome5
+                                size={15}
+                                color={'#354D29'}
+                                style={styles.iconSize}
+                                name={'envelope'}
+                            />
+                            <Text style={styles.labelText}>{User.email}</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -184,7 +193,7 @@ export default function ProfileScreen() {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
                         {logged_in ? '₱150' : '₱0'}
                     </Text>
-                    <Text style={{ fontSize: 12, color: '#596F62' }}>
+                    <Text style={{ fontSize: 12, color: '#354D29' }}>
                         Wallet
                     </Text>
                 </View>
@@ -192,7 +201,7 @@ export default function ProfileScreen() {
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
                         {logged_in ? '12' : '0'}
                     </Text>
-                    <Text style={{ fontSize: 12, color: '#596F62' }}>
+                    <Text style={{ fontSize: 12, color: '#354D29' }}>
                         Orders
                     </Text>
                 </View>
@@ -203,7 +212,7 @@ export default function ProfileScreen() {
                         style={({ pressed }) => [
                             { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
                             , styles.settings_contents]}
-                        onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                        onPress={logged_in ? favoritesHandler : setShowLoginHandler}
                     >
                         <View style={styles.settings_contents}>
                             <FontAwesome5
@@ -339,12 +348,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         marginLeft: 40,
-        marginTop: 50,
+        marginTop: 10,
     },
     profile: {
         width: 100,
         height: 100,
-        borderRadius: 80,
+        borderRadius: 40,
     },
     profileName: {
         marginLeft: 20,
@@ -354,6 +363,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontSize: 11,
         fontFamily: 'Raleway-Light',
+        color: '#596F62',
     },
     Icons: {
         marginTop: 20,
@@ -370,6 +380,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginLeft: 9,
         fontFamily: 'Raleway-Thin',
+        color: '#596F62',
     },
     transactionView: {
         flex: 1,
@@ -400,5 +411,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         fontFamily: 'Raleway-Medium',
         marginLeft: 10,
+        color: '#354D29',
     },
 });

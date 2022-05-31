@@ -74,15 +74,21 @@ const Login = (props) => {
 
     //Button Handler for Login
     const setData = () => {
-        if (loginState === 'email') {
-            email = text;
-            setLabel('Password');
-            setPlaceholder('password');
-            setButtonText('Login');
-            setLoginState('password');
-        } else if (loginState === 'password') {
-            pass = text;
-            onLogin();
+        if (text.length > 5) {
+            if (loginState === 'email' && text.match('@gmail.com')) {
+                email = text;
+                setLabel('Password');
+                setPlaceholder('password');
+                setButtonText('Login');
+                setLoginState('password');
+            } else if (loginState === 'password') {
+                pass = text;
+                onLogin();
+            } else {
+                ToastAndroid.show('Invalid credentials', ToastAndroid.LONG);
+            }
+        } else {
+            ToastAndroid.show('Too Short', ToastAndroid.LONG);
         }
     };
 
@@ -172,8 +178,13 @@ const Login = (props) => {
                                 {buttonText}
                             </Text>
                         </Pressable>
-                        <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Forgot Password?</Text>
-                        <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Create Account</Text>
+                        <Text
+                            onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
+                            style={{ marginBottom: 10 }}
+                        >
+                            Forgot Password?
+                        </Text>
+                        <Text onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}>Not yet a member?</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Pressable
