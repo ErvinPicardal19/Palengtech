@@ -10,32 +10,15 @@ import {
     Text,
     View,
     Pressable,
-    FlatList,
-    RefreshControl,
     ScrollView,
     ImageBackground,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import CheckoutScreen from './CheckoutScreen.js';
+import CheckoutScreen from '../../utils/CheckoutScreen.js';
+import SearchBar from 'react-native-dynamic-search-bar';
 
 export default function ShopScreen() {
 
-    const [showCheckout, setShowCheckout] = useState(false);
-
-    //Pag Testing lang
-    const [Items, setItems] = useState([
-        { name: 'Shop 1' },
-        { name: 'Shop 2' },
-        { name: 'Shop 3' },
-        { name: 'Shop 4' },
-        { name: 'Shop 5' },
-        { name: 'Shop 6' },
-        { name: 'Shop 7' },
-        { name: 'Shop 8' },
-        { name: 'Shop 9' },
-        { name: 'Shop 10' },
-        { name: 'Shop 11' },
-    ]);
 
     //Pag Testing lang
     const [Ingredients, setIngredients] = useState([
@@ -45,28 +28,56 @@ export default function ShopScreen() {
         { key: 4, category: 'Vegetables', src: 'https://cdn.britannica.com/17/196817-050-6A15DAC3/vegetables.jpg' },
     ]);
 
+    const [showCheckout, setShowCheckout] = useState(false);
+
     const onPressHandler = () => {
         setShowCheckout(!showCheckout);
     };
 
+
     return (
         <View>
-            <CheckoutScreen
-                showCheckout={showCheckout}
-                setShowCheckout={setShowCheckout}
-            />
-            <View style={{ width: 50, height: 40, backgroundColor: '#00000000' }}>
-                <FontAwesome5.Button
-                    size={20}
-                    name={'shopping-cart'}
-                    backgroundColor={'#00000000'}
-                    underlayColor={'#00000000'}
-                    color={'#76AB5A'}
-                    onPress={onPressHandler}
+            <View style={{
+                flexDirection: 'row',
+                backgroundColor: '#D3F2C2',
+                padding: 10,
+            }}>
+                <SearchBar
+                    style={{
+                        borderWidth: 1,
+                        borderColor: '#354D29',
+                    }}
+                    fontColor="#76AB5A"
+                    iconColor="#76AB5A"
+                    shadowColor="#282828"
+                    cancelIconColor="#76AB5A"
+                    backgroundColor="#ffffff"
+                    darkMode={false}
+                    placeholder="Search here"
+                    // onChangeText={(text) => this.filterList(text)}
+                    onSearchPress={() => console.log('Search Icon is pressed')}
+                    // onClearPress={() => this.filterList('')}
+                    onPress={() => console.log('onPress')}
                 />
+                <CheckoutScreen
+                    showCheckout={showCheckout}
+                    setShowCheckout={setShowCheckout}
+                />
+                <View style={{ width: 55, height: 50, backgroundColor: '#00000000', marginTop: 3 }}>
+                    <FontAwesome5.Button
+                        size={23}
+                        name={'shopping-cart'}
+                        backgroundColor={'#00000000'}
+                        underlayColor={'#00000000'}
+                        color={'#354D29'}
+                        style={styles.checkout}
+                        onPress={onPressHandler}
+                    />
+                </View>
             </View>
+
             <ScrollView
-                contentContainerStyle={{ paddingBottom: 40 }}
+                contentContainerStyle={{ paddingBottom: 72 }}
                 scrollEventThrottle={1000}
             >
                 {

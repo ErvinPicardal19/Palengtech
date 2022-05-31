@@ -10,10 +10,11 @@ import {
   View,
   Pressable,
 } from 'react-native';
-import HomeScreen from './screens/HomeScreen.js';
-import ProfileScreen from './screens/ProfileScreen.js';
-import ShopScreen from './screens/ShopScreen.js';
-import ChatScreen from './screens/ChatScreen.js';
+import HomeScreen from './screens/Home/HomeScreen.js';
+import ProfileScreen from './screens/Profile/ProfileScreen.js';
+import ShopScreen from './screens/Shop/ShopScreen.js';
+import ChatScreen from './screens/Chat/ChatScreen.js';
+import Header from './shared/Header.js';
 
 import { Provider } from 'react-redux';
 import { Store } from './redux/store.js';
@@ -30,6 +31,7 @@ const App = () => {
   return (
     <Provider store={Store}>
       <NavigationContainer>
+        <Header />
         <Tab.Navigator
           barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderColor: '#354D2955' }}
           activeColor="#76AB5A"
@@ -90,9 +92,5 @@ const App = () => {
     </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-
-});
 
 export default App;
