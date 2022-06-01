@@ -34,8 +34,8 @@ export default function SearchProducts(props) {
                                     <Image
                                         source={{ uri: item.image }}
                                     />
-                                    <Text style={styles.textContainer}>{item.name}</Text>
                                 </View>
+                                <Text style={styles.textContainer}>{item.name}</Text>
                             </Pressable>
                         }
                         keyExtractor={(item, index) => index.toString()}
@@ -60,10 +60,12 @@ const styles = StyleSheet.create({
     },
     center: {
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        height: 60,
+        alignItems: 'center',
     },
     textContainer: {
         padding: 10,
+        color: '#000000',
     },
 });
 

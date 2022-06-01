@@ -11,7 +11,7 @@ import {
     RefreshControl,
     FlatList,
     Text,
-    ScrollView,
+    ImageBackground,
     SafeAreaView,
     Image,
 } from 'react-native';
@@ -28,6 +28,7 @@ import SearchProducts from './SearchProducts.js';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setHideSearch } from '../../redux/actions.js';
+import Header from '../../shared/Header.js';
 
 const data = require('../../../assets/data/products.json');
 const Categories = require('../../../assets/data/category.json');
@@ -161,44 +162,49 @@ export default function HomeScreen(props) {
 
     return (
         <View style={{ backgroundColor: 'transparent' }}>
-            <View style={{
-                flexDirection: 'row',
-                backgroundColor: '#D3F2C2',
-                padding: 10,
-            }}>
-                <SearchBar
+            <ImageBackground
+                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHy09JUSZGoQfZ30g9d_WMUwmaC5dCAKQbn59gPeKo-jpUlNTsH4PrC2ZfxHNC_iZr5bk&usqp=CAU' }}
+                resizeMode="cover"
+            >
+                <Header />
+                <View
                     style={{
-                        borderWidth: 1,
-                        borderColor: '#354D29',
-                        width: 290,
+                        flexDirection: 'row',
+                        padding: 10,
                     }}
-                    fontColor="#76AB5A"
-                    iconColor="#76AB5A"
-                    shadowColor="#282828"
-                    cancelIconColor="#76AB5A"
-                    backgroundColor="#ffffff"
-                    placeholder="Maghanap ng Tindahan"
-                    onFocus={openList}
-                    onChangeText={(text) => searchProduct(text)}
-                    // onSearchPress={() => console.log('Search Icon is pressed')}
-                    onClearPress={onBlur}
-                // onPress={openList}
-                />
-                <CheckoutScreen
-                    showCheckout={showCheckout}
-                    setShowCheckout={setShowCheckout}
-                />
-                <View style={{ marginLeft: 5, width: 55, height: 50, backgroundColor: '#00000000', marginTop: 3 }}>
-                    <FontAwesome5.Button
-                        size={23}
-                        name={'shopping-cart'}
-                        backgroundColor={'#00000000'}
-                        underlayColor={'#00000000'}
-                        color={'#354D29'}
-                        onPress={onPressHandler}
+                >
+                    <SearchBar
+                        style={{
+                            width: BannerWidth - 70,
+                        }}
+                        fontColor="#76AB5A"
+                        iconColor="#76AB5A"
+                        shadowColor="#282828"
+                        cancelIconColor="#76AB5A"
+                        backgroundColor="#ffffff"
+                        placeholder="Maghanap ng Tindahan"
+                        onFocus={openList}
+                        onChangeText={(text) => searchProduct(text)}
+                        // onSearchPress={() => console.log('Search Icon is pressed')}
+                        onClearPress={onBlur}
+                    // onPress={openList}
                     />
+                    <CheckoutScreen
+                        showCheckout={showCheckout}
+                        setShowCheckout={setShowCheckout}
+                    />
+                    <View style={{ marginLeft: 5, width: 55, height: 50, backgroundColor: '#00000000', marginTop: 7 }}>
+                        <FontAwesome5.Button
+                            size={23}
+                            name={'shopping-cart'}
+                            backgroundColor={'#00000000'}
+                            underlayColor={'#00000000'}
+                            color={'#354D29'}
+                            onPress={onPressHandler}
+                        />
+                    </View>
                 </View>
-            </View>
+            </ImageBackground>
             {
                 focus === true ?
                     <SearchProducts
@@ -209,7 +215,7 @@ export default function HomeScreen(props) {
                     <SafeAreaView style={{ backgroundColor: '#ffffff' }}>
                         <FlatList
                             numColumns={2}
-                            contentContainerStyle={{ paddingBottom: 150 }}
+                            contentContainerStyle={{ paddingBottom: 300 }}
                             data={productsCtg}
                             renderItem={({ item }) => <ProductList key={item._id}
                                 navigation={props.navigation}
