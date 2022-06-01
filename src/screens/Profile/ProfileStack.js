@@ -139,7 +139,7 @@ export default function ProfileStack({ navigation }) {
                 setUser={setUser}
                 logged_in={logged_in}
             />
-            <View style={{ backgroundColor: '#D3F2C2' }}>
+            <View style={{ backgroundColor: '#D3F2C2', marginTop: 10 }}>
                 <View style={styles.profileContainer}>
                     <Image
                         style={styles.profile}
@@ -315,7 +315,7 @@ export default function ProfileStack({ navigation }) {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#D3F2C2',
     },
     input: {
         width: 250,

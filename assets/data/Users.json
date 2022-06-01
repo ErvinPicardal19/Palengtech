@@ -1,0 +1,29 @@
+[
+    {
+        "email": "User1",
+        "username": "@User1",
+        "pwd": "User1",
+        "name": "John Doe",
+        "img": "https://images.pexels.com/photos/775358/pexels-photo-775358.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "phone": "0912345678",
+        "location": "Quezon City"
+    },
+    {
+        "email": "User2",
+        "username": "@User2",
+        "pwd": "User2",
+        "name": "Steven Smith",
+        "img": "https://images.pexels.com/photos/8159657/pexels-photo-8159657.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+        "phone": "0912345678",
+        "location": "Antipolo City"
+    },
+    {
+        "email": "User3",
+        "username": "@User3",
+        "pwd": "User3",
+        "name": "John Kingston",
+        "img": "https://images.pexels.com/photos/7562313/pexels-photo-7562313.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+        "phone": "0912345678",
+        "location": "Caloocan City"
+    }
+]
