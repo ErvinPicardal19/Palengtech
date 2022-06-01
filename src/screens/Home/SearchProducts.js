@@ -16,32 +16,48 @@ export default function SearchProducts(props) {
 
     return (
         <View style={{ width: '100%' }}>
-            <FlatList
-                // onScroll={ }
-                // numColumns={2}
-                // contentContainerStyle={{ paddingBottom: 150 }}
-                data={productsFiltered}
-                renderItem={({ item }) =>
-                    <Pressable
-                        style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
-                            , styles.center]}
-                    >
-                        <View >
-                            <Image
-                                source={{ uri: item.image }}
-                            />
-                            <Text style={styles.textContainer}>{item.name}</Text>
-                        </View>
-                    </Pressable>
-                }
-                keyExtractor={(item, index) => index.toString()}
-            />
+            {
+                productsFiltered.length > 0 ?
+                    <FlatList
+                        // onScroll={ }
+                        // numColumns={2}
+                        // contentContainerStyle={{ paddingBottom: 150 }}
+                        data={productsFiltered}
+                        renderItem={({ item }) =>
+                            <Pressable
+                                onPress={() => props.navigation.navigate('Product', { item: item })}
+                                style={({ pressed }) => [
+                                    { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                                    , styles.center]}
+                            >
+                                <View>
+                                    <Image
+                                        source={{ uri: item.image }}
+                                    />
+                                    <Text style={styles.textContainer}>{item.name}</Text>
+                                </View>
+                            </Pressable>
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                    :
+                    <View style={styles.notFound}>
+                        <Text>
+                            Store does not exist
+                        </Text>
+                    </View>
+            }
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    notFound: {
+        width: '100%',
+        height: 400,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     center: {
         flexDirection: 'row',
         borderBottomWidth: 1,

@@ -1,0 +1,42 @@
+[
+    {
+        "_id": {
+            "$oid": "6295220538d201a0e00839f2"
+        },
+        "name": "Meat",
+        "description": "Poultry & Dairy",
+        "__v": 0
+    },
+    {
+        "_id": {
+            "$oid": "629526f27fadcf75f2bb3a9c"
+        },
+        "name": "Grains",
+        "description": "Rice",
+        "__v": 1
+    },
+    {
+        "_id": {
+            "$oid": "6297578f13b7349d2284e800"
+        },
+        "name": "Fish",
+        "description": "Fish & Seafood",
+        "__v": 2
+    },
+    {
+        "_id": {
+            "$oid": "629757bfab84ed2979b05c31"
+        },
+        "name": "Fruits",
+        "description": "Fruits",
+        "__v": 3
+    },
+    {
+        "_id": {
+            "$oid": "629757e26c533a10aef3a778"
+        },
+        "name": "Vegies",
+        "description": "Vegetables",
+        "__v": 4
+    }
+]

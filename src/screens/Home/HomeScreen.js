@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
@@ -7,7 +8,7 @@ import {
     View,
     Pressable,
     Dimensions,
-    ActivityIndicator,
+    RefreshControl,
     FlatList,
     Text,
     ScrollView,
@@ -17,6 +18,7 @@ import {
 // import { Picker } from '@react-native-picker/picker';
 // import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 import SearchBar from 'react-native-dynamic-search-bar';
+import CategoryFilter from './CategoryFilter.js';
 import ProductList from './ProductList.js';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CheckoutScreen from '../../utils/CheckoutScreen.js';
@@ -24,7 +26,11 @@ import Carousel from 'react-native-banner-carousel';
 // import Animated from 'react-native-reanimated';
 import SearchProducts from './SearchProducts.js';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setHideSearch } from '../../redux/actions.js';
+
 const data = require('../../../assets/data/products.json');
+const Categories = require('../../../assets/data/category.json');
 
 const bannerImages = [
     'https://pinoytransplantiniowa.files.wordpress.com/2011/05/2641520585_51acd6a7d0.jpg?w=584',
@@ -36,24 +42,52 @@ const BannerWidth = Dimensions.get('window').width;
 const BannerHeight = 260;
 
 
-export default function HomeScreen() {
+export default function HomeScreen(props) {
+
+    const { hideSearch } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
 
     const [products, setProducts] = useState([]);
     const [showCheckout, setShowCheckout] = useState(false);
     const [productsFiltered, setProductsFiltered] = useState([]);
     const [focus, setFocus] = useState();
+    const [categories, setCategories] = useState([]);
+    const [productsCtg, setProductsCtg] = useState([]);
+    const [active, setActive] = useState();
+    const [initialState, setInitialState] = useState([]);
+    const [Refreshing, setRefreshing] = useState(false);
+    // const [hideSearch, setHideSearch] = useState(false);
 
     useEffect(() => {
         setProducts(data);
         setProductsFiltered(data);
         setFocus(false);
+        setCategories(Categories);
+        setProductsCtg(data);
+        setActive(-1);
+        setInitialState(data);
 
         return () => {
             setProducts([]);
             setProductsFiltered([]);
             setFocus();
+            setCategories([]);
+            setActive();
+            setInitialState([]);
         };
     }, []);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        // setItems([...Items, { name: 'Item 69' }]);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1000);
+    };
+
+    const toggleSearch = () => {
+        dispatch(setHideSearch(!hideSearch));
+    };
 
     const searchProduct = (text) => {
         setProductsFiltered(
@@ -74,25 +108,54 @@ export default function HomeScreen() {
         setShowCheckout(!showCheckout);
     };
 
+    // Categories
+    const changeCtg = (ctg) => {
+        {
+            ctg === 'all' ?
+                [setProductsCtg(initialState), setActive(true)]
+                :
+                [
+                    setProductsCtg(
+                        products.filter((i) => {
+                            // console.log('Category_ID:' + i.category.$oid + '\tCtg:' + ctg.$oid);
+                            if (i.category.$oid === ctg.$oid) {
+                                return i;
+                            }
+                        }),
+                        setActive(true)
+                    ),
+                ];
+        }
+    }
+
     const Banner = () => {
         return (
-            <Carousel
-                autoplay
-                autoplayTimeout={5000}
-                loop
-                index={0}
-                pageSize={BannerWidth}
-            >
-                {
-                    bannerImages.map((image, index) => {
-                        return (
-                            <View key={index}>
-                                <Image style={{ width: BannerWidth, height: BannerHeight }} source={{ uri: image }} />
-                            </View>
-                        );
-                    })
-                }
-            </Carousel>
+            <View>
+                <Carousel
+                    autoplay
+                    autoplayTimeout={5000}
+                    loop
+                    index={0}
+                    pageSize={BannerWidth}
+                >
+                    {
+                        bannerImages.map((image, index) => {
+                            return (
+                                <View key={index}>
+                                    <Image style={{ width: BannerWidth, height: BannerHeight }} source={{ uri: image }} />
+                                </View>
+                            );
+                        })
+                    }
+                </Carousel>
+                <CategoryFilter
+                    categories={categories}
+                    categoryFilter={changeCtg}
+                    productsCtg={productsCtg}
+                    active={active}
+                    setActive={setActive}
+                />
+            </View>
         );
     };
 
@@ -139,21 +202,29 @@ export default function HomeScreen() {
             {
                 focus === true ?
                     <SearchProducts
+                        navigation={props.navigation}
                         productsFiltered={productsFiltered}
                     />
                     :
                     <SafeAreaView style={{ backgroundColor: '#ffffff' }}>
                         <FlatList
-                            // onScroll={ }
                             numColumns={2}
                             contentContainerStyle={{ paddingBottom: 150 }}
-                            data={products}
-                            renderItem={({ item }) => <ProductList key={item.id}
+                            data={productsCtg}
+                            renderItem={({ item }) => <ProductList key={item._id}
+                                navigation={props.navigation}
                                 item={item}
                             />
                             }
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item, index) => item.description}
                             ListHeaderComponent={Banner}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={Refreshing}
+                                    onRefresh={onRefresh}
+                                    colors={['#354D29']}
+                                />
+                            }
                         />
                     </SafeAreaView>
             }
@@ -172,5 +243,11 @@ const styles = StyleSheet.create({
         color: '#354D29',
         margin: 10,
         fontSize: 20,
+    },
+    slideButton: {
+        width: '100%',
+        backgroundColor: '#76AB5A',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
