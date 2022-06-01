@@ -9,9 +9,16 @@ import {
     Text,
     ScrollView,
     Button,
+    Dimensions,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+
+var { width } = Dimensions.get('window');
 
 export default function SingleProduct(props) {
+
+    const [checkoutPressed, setCheckOutPressed] = useState(false);
     const [item, setItem] = useState(props.route.params.item);
     const [availability, setAvailability] = useState(null);
 
@@ -33,6 +40,11 @@ export default function SingleProduct(props) {
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <Text style={styles.price}>₱{item.price}</Text>
+                <View style={styles.checkoutButton}>
+                    <TouchableOpacity>
+                        <Text style={{ color: '#48B9F1' }}>CHECKOUT</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -78,6 +90,11 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 24,
         margin: 20,
-        color: 'red',
+        color: '#354D29',
+    },
+    checkoutButton: {
+
+        justifyContent: 'center',
+        marginLeft: (width / 2) - 10,
     },
 });

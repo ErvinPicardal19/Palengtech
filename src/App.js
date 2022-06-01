@@ -35,10 +35,9 @@ const App = () => {
   return (
     <Provider store={Store}>
       <NavigationContainer>
-        <Header />
         <Tab.Navigator
           initialRouteName="Home"
-          barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderColor: '#354D2955' }}
+          barStyle={{ backgroundColor: '#ffffff', borderTopWidth: 1, borderColor: '#354D2933', padding: 10, borderTopRightRadius: 20, borderTopLeftRadius: 20, }}
           activeColor="#76AB5A"
           inactiveColor="#ffffff"
           keyboardHidesNavigationBar={true}
@@ -65,7 +64,7 @@ const App = () => {
                 color = focused ? '#76AB5A' : '#555';
               }
               return (
-                <View style={{ width: 29, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }}>
                   <FontAwesome5
                     name={iconName}
                     size={size}

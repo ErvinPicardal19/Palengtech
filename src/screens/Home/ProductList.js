@@ -19,7 +19,7 @@ export default function ProductList(props) {
             style={{ width: '50%' }}
             onPress={() => props.navigation.navigate('Product', { item: item })}
         >
-            <View style={{ backgroundColor: 'transparent' }}
+            <View style={{ backgroundColor: '#FFFAFA' }}
             >
                 <ProductCard {...item} />
             </View>
