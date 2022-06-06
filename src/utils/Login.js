@@ -25,7 +25,8 @@ import GlobalStyle from './GlobalStyle';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
-// import {  setEmail, setPassword } from '../redux/actions.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, setLogged_in } from '../redux/actions/actions.js';
 
 const db = SQLite.openDatabase(
     {
@@ -36,22 +37,14 @@ const db = SQLite.openDatabase(
     (error) => { console.log(error); }
 );
 
-const userDatabase = [
-    {
-        email: 'ervinjohnpicardal@gmail.com',
-        username: '@EJPIcardal',
-        pwd: 'September152000',
-        name: 'Ervin Picardal',
-        img: 'https://scontent.fmnl9-1.fna.fbcdn.net/v/t39.30808-6/279971547_5509998139018918_2121235480071672192_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=9m_DXtIy4XoAX9UER5W&tn=-MVmxUUVn3gJ6oLu&_nc_ht=scontent.fmnl9-1.fna&oh=00_AT9OanbqQpTrir6Qay-8Feane6dfx2owd5u5XvnArHwKag&oe=6299C20D',
-        phone: 9063776319,
-        location: 'Antipolo City',
-    },
-];
+const userDatabase = require('../../assets/data/Users.json');
 
 let email = '';
 let pass = '';
 
 const Login = (props) => {
+    const { user, logged_in } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
     //Hooks
     const [text, setText] = useState('');
     const [label, setLabel] = useState('Email');
@@ -74,8 +67,8 @@ const Login = (props) => {
 
     //Button Handler for Login
     const setData = () => {
-        if (text.length > 5) {
-            if (loginState === 'email' && text.match('@gmail.com')) {
+        if (text.length > 3) {
+            if (loginState === 'email' /*&& text.match('@gmail.com')*/) {
                 email = text;
                 setLabel('Password');
                 setPlaceholder('password');
@@ -105,17 +98,17 @@ const Login = (props) => {
             ToastAndroid.show('Incorrect Username or Password', ToastAndroid.LONG);
         } else {
             try {
-                props.setUser({
+                dispatch(setUser({
                     name: user.name,
                     profile: user.img,
                     username: user.username,
                     email: user.email,
-                    phone: user.phone,
+                    phone: Number(user.phone),
                     location: user.location,
-                });
+                }));
                 await db.transaction(async (tx) => {
                     await tx.executeSql(
-                        "INSERT INTO Users (Name, Profile, Email, Username, Phone, Location) VALUES ('" + user.name + "','" + user.img + "','" + user.email + "','" + user.username + "'," + user.phone + ",'" + user.location + "');"
+                        "INSERT INTO Users (Name, Profile, Email, Username, Phone, Location) VALUES ('" + user.name + "','" + user.img + "','" + user.email + "','" + user.username + "'," + Number(user.phone) + ",'" + user.location + "');"
                     );
                 });
 
@@ -123,7 +116,7 @@ const Login = (props) => {
             } catch (err) {
                 console.log(err);
             }
-            props.setLogged_in(true);
+            dispatch(setLogged_in(true));
         }
         setLabel('Email');
         setPlaceholder('email@gmail.com');

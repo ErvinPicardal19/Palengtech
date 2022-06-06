@@ -11,25 +11,26 @@ import {
     RefreshControl,
     FlatList,
     Text,
-    ScrollView,
+    ImageBackground,
     SafeAreaView,
     Image,
+    Animated,
 } from 'react-native';
 // import { Picker } from '@react-native-picker/picker';
 // import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 import SearchBar from 'react-native-dynamic-search-bar';
 import CategoryFilter from './CategoryFilter.js';
-import ProductList from './ProductList.js';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import CheckoutScreen from '../../utils/CheckoutScreen.js';
+import StoreList from './StoreList.js';
+
 import Carousel from 'react-native-banner-carousel';
 // import Animated from 'react-native-reanimated';
 import SearchProducts from './SearchProducts.js';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setHideSearch } from '../../redux/actions.js';
+import { setHideSearch } from '../../redux/actions/actions.js';
+import Header from '../../shared/Header.js';
 
-const data = require('../../../assets/data/products.json');
+const data = require('../../../assets/data/shop.json');
 const Categories = require('../../../assets/data/category.json');
 
 const bannerImages = [
@@ -42,13 +43,12 @@ const BannerWidth = Dimensions.get('window').width;
 const BannerHeight = 260;
 
 
-export default function HomeScreen(props) {
+export default function HomeScreen({ navigation }) {
 
     const { hideSearch } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
     const [products, setProducts] = useState([]);
-    const [showCheckout, setShowCheckout] = useState(false);
     const [productsFiltered, setProductsFiltered] = useState([]);
     const [focus, setFocus] = useState();
     const [categories, setCategories] = useState([]);
@@ -56,6 +56,7 @@ export default function HomeScreen(props) {
     const [active, setActive] = useState();
     const [initialState, setInitialState] = useState([]);
     const [Refreshing, setRefreshing] = useState(false);
+    const [pos, setPos] = useState(0);
     // const [hideSearch, setHideSearch] = useState(false);
 
     useEffect(() => {
@@ -85,9 +86,9 @@ export default function HomeScreen(props) {
         }, 1000);
     };
 
-    const toggleSearch = () => {
-        dispatch(setHideSearch(!hideSearch));
-    };
+    // const toggleSearch = () => {
+    //     dispatch(setHideSearch(true));
+    // };
 
     const searchProduct = (text) => {
         setProductsFiltered(
@@ -103,9 +104,17 @@ export default function HomeScreen(props) {
         setFocus(false);
     };
 
-
-    const onPressHandler = () => {
-        setShowCheckout(!showCheckout);
+    const checkPos = (currentPos) => {
+        let x = currentPos;
+        // console.log(x);
+        if (x >= 250) {
+            dispatch(setHideSearch(true));
+        }
+        else if (x <= 50) {
+            // console.log('Scrolling Down');
+            dispatch(setHideSearch(false));
+        }
+        setPos(currentPos);
     };
 
     // Categories
@@ -122,11 +131,12 @@ export default function HomeScreen(props) {
                                 return i;
                             }
                         }),
-                        setActive(true)
-                    ),
+                    ), setActive(true),
                 ];
         }
-    }
+        // console.log(productsCtg);
+    };
+
 
     const Banner = () => {
         return (
@@ -161,58 +171,70 @@ export default function HomeScreen(props) {
 
     return (
         <View style={{ backgroundColor: 'transparent' }}>
-            <View style={{
-                flexDirection: 'row',
-                backgroundColor: '#D3F2C2',
-                padding: 10,
-            }}>
-                <SearchBar
-                    style={{
-                        borderWidth: 1,
-                        borderColor: '#354D29',
-                        width: 290,
-                    }}
-                    fontColor="#76AB5A"
-                    iconColor="#76AB5A"
-                    shadowColor="#282828"
-                    cancelIconColor="#76AB5A"
-                    backgroundColor="#ffffff"
-                    placeholder="Maghanap ng Tindahan"
-                    onFocus={openList}
-                    onChangeText={(text) => searchProduct(text)}
-                    // onSearchPress={() => console.log('Search Icon is pressed')}
-                    onClearPress={onBlur}
-                // onPress={openList}
-                />
-                <CheckoutScreen
-                    showCheckout={showCheckout}
-                    setShowCheckout={setShowCheckout}
-                />
-                <View style={{ marginLeft: 5, width: 55, height: 50, backgroundColor: '#00000000', marginTop: 3 }}>
-                    <FontAwesome5.Button
-                        size={23}
-                        name={'shopping-cart'}
-                        backgroundColor={'#00000000'}
-                        underlayColor={'#00000000'}
-                        color={'#354D29'}
-                        onPress={onPressHandler}
-                    />
-                </View>
-            </View>
+            {/* <ImageBackground
+                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHy09JUSZGoQfZ30g9d_WMUwmaC5dCAKQbn59gPeKo-jpUlNTsH4PrC2ZfxHNC_iZr5bk&usqp=CAU' }}
+                resizeMode="cover"
+            > */}
+            {
+                focus ? null : <Header name={'Home'} navigation={navigation} hide={false} />
+            }
+            {
+                hideSearch ?
+                    null
+                    :
+                    <View
+                        style={[
+                            {
+                                flexDirection: 'row',
+                                padding: 10,
+                            },
+                        ]}
+                    >
+                        <SearchBar
+                            style={focus ? {
+                                backgroundColor: 'white',
+                                height: 35,
+                            } : {
+                                backgroundColor: '#C6C6C6',
+                                height: 35,
+                            }
+                            }
+                            fontSize={13}
+                            padding={0}
+                            placeholderTextColor={'#62626299'}
+                            iconColor="transparent"
+                            shadowColor="#282828"
+                            cancelIconColor={'#959595'}
+                            clearIconContainer={{ color: '#959595' }}
+                            searchIconImageStyle={'#D3F2C2'}
+                            placeholder="Maghanap ng Tindahan"
+                            onFocus={openList}
+                            onChangeText={(text) => {
+                                searchProduct(text);
+                                openList();
+                            }}
+                            // onSearchPress={() => console.log('Search Icon is pressed')}
+                            onClearPress={onBlur}
+                            onPress={openList}
+                        />
+                    </View>
+            }
+            {/* </ImageBackground> */}
             {
                 focus === true ?
                     <SearchProducts
-                        navigation={props.navigation}
+                        navigation={navigation}
                         productsFiltered={productsFiltered}
                     />
                     :
-                    <SafeAreaView style={{ backgroundColor: '#ffffff' }}>
+                    <SafeAreaView style={{ backgroundColor: '#f2f2f2' }}>
                         <FlatList
-                            numColumns={2}
-                            contentContainerStyle={{ paddingBottom: 150 }}
+                            onScroll={(e) => checkPos(e.nativeEvent.contentOffset.y)}
+                            // numColumns={2}
+                            contentContainerStyle={{ paddingBottom: 250 }}
                             data={productsCtg}
-                            renderItem={({ item }) => <ProductList key={item._id}
-                                navigation={props.navigation}
+                            renderItem={({ item }) => <StoreList key={item._id}
+                                navigation={navigation}
                                 item={item}
                             />
                             }

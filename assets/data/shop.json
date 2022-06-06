@@ -1,0 +1,54 @@
+[
+    {
+        "_id": {
+            "$oid": "62951dcec04446d4e72d1d0e"
+        },
+        "image": "https://i0.wp.com/www.astigvegan.com/wp-content/uploads/2019/11/pampanga-public-market.jpg?resize=576%2C576",
+        "rating": 1,
+        "numReviews": 0,
+        "isFeatured": true,
+        "name": "Aling Kuring",
+        "description": "Aling Kuring Vegetable Market",
+        "address": "R. Jabson Street, Pateros, Metro Manila",
+        "category": {
+            "$oid": "629757e26c533a10aef3a778"
+        },
+        "__v": 0
+    },
+    {
+        "_id": {
+            "$oid": "6295265f43ee2a74b9ab756e"
+        },
+        "image": "https://starmarketdotph.files.wordpress.com/2020/08/img_2309c.jpg?w=1024",
+        "price": 100,
+        "rating": 4,
+        "numReviews": 1,
+        "isFeatured": true,
+        "name": "Nene's Butchery",
+        "description": "Nene's Butchery",
+        "address": "436 Barangka Dr., Mandaluyong, 1550 Kalakhang Maynila",
+        "category": {
+            "$oid": "6295220538d201a0e00839f2"
+        },
+        "countInStock": 13,
+        "__v": 1
+    },
+    {
+        "_id": {
+            "$oid": "629526eead02b4d2f288131d"
+        },
+        "image": "https://sa.kapamilya.com/absnews/abscbnnews/media/2017/news/10/04/rice.jpg",
+        "price": 450,
+        "rating": 3,
+        "numReviews": 0,
+        "isFeatured": true,
+        "name": "Bigas ni Lolo",
+        "description": "Bigas ni Lolo",
+        "address": "6022 Escuela, Makati, Metro Manila",
+        "category": {
+            "$oid": "629526f27fadcf75f2bb3a9c"
+        },
+        "countInStock": 30,
+        "__v": 2
+    },
+]

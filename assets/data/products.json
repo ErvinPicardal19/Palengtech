@@ -1,53 +1,70 @@
 [
     {
         "_id": {
+            "$oid": "629b8f9d7c008541dca8648c"
+        },
+        "countInStock": 13,
+        "name": "Kamote",
+        "img": "https://cdn.shopify.com/s/files/1/0024/9695/4415/products/IMG_4530_1024x1024.jpg?v=1575875474",
+        "description": "Fresh Chicken",
+        "price": 250,
+        "numReviews": 1,
+        "rating": 4,
+        "isFeatured": true,
+        "OwnerID": {
             "$oid": "62951dcec04446d4e72d1d0e"
         },
-        "image": "https://assets.stickpng.com/images/580b57fbd9996e24bc43bba8.png",
-        "price": 250,
-        "rating": 1,
-        "numReviews": 0,
-        "isFeatured": true,
-        "name": "Aling Kuring",
-        "description": "Aling Kuring Poultry",
-        "category": {
-            "$oid": "6295220538d201a0e00839f2"
-        },
-        "countInStock": 25,
         "__v": 0
     },
     {
         "_id": {
-            "$oid": "6295265f43ee2a74b9ab756e"
-        },
-        "image": "https://assets.stickpng.com/images/580b57fbd9996e24bc43bba8.png",
-        "price": 100,
-        "rating": 4,
-        "numReviews": 1,
-        "isFeatured": true,
-        "name": "Nene's Butchery",
-        "description": "Nene's Butchery",
-        "category": {
-            "$oid": "6295220538d201a0e00839f2"
+            "$oid": "629b8fa3ce496d70a145b548"
         },
         "countInStock": 13,
+        "name": "Pork",
+        "img": "https://i0.wp.com/rmn.ph/wp-content/uploads/2021/07/KARNE-NG-BABOY-1.jpg?fit=1280%2C720&ssl=1",
+        "description": "Fresh Chicken",
+        "price": 250,
+        "numReviews": 1,
+        "rating": 4,
+        "isFeatured": true,
+        "OwnerID": {
+            "$oid": "6295265f43ee2a74b9ab756e"
+        },
         "__v": 1
     },
     {
         "_id": {
+            "$oid": "629b8fab4e18bad1b0ecb1fe"
+        },
+        "countInStock": 13,
+        "name": "Manok",
+        "img": "https://thumbs.dreamstime.com/b/fresh-raw-chicken-isolated-white-85897118.jpg",
+        "description": "Fresh Chicken",
+        "price": 250,
+        "numReviews": 1,
+        "rating": 4,
+        "isFeatured": true,
+        "OwnerID": {
             "$oid": "629526eead02b4d2f288131d"
         },
-        "image": "https://pngimg.com/uploads/rice/rice_PNG45.png",
-        "price": 450,
-        "rating": 3,
-        "numReviews": 0,
-        "isFeatured": true,
-        "name": "Bigas ni Lolo",
-        "description": "Bigas ni Lolo",
-        "category": {
-            "$oid": "629526f27fadcf75f2bb3a9c"
-        },
-        "countInStock": 30,
         "__v": 2
     },
+    {
+        "_id": {
+            "$oid": "629bc73d4bd651ff3930f04a"
+        },
+        "countInStock": 6,
+        "name": "Pechay",
+        "img": "https://meatmyveggies.com/wp-content/uploads/2021/05/pechay.jpg",
+        "description": "Fresh Chicken",
+        "price": 1000,
+        "numReviews": 1,
+        "rating": 4,
+        "isFeatured": true,
+        "OwnerID": {
+            "$oid": "62951dcec04446d4e72d1d0e"
+        },
+        "__v": 3
+    }
 ]

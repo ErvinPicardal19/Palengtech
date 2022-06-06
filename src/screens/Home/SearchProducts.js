@@ -15,7 +15,7 @@ export default function SearchProducts(props) {
     const { productsFiltered } = props;
 
     return (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '100%', height: '100%', backgroundColor: '#FAFAFA' }}>
             {
                 productsFiltered.length > 0 ?
                     <FlatList
@@ -25,17 +25,17 @@ export default function SearchProducts(props) {
                         data={productsFiltered}
                         renderItem={({ item }) =>
                             <Pressable
-                                onPress={() => props.navigation.navigate('Product', { item: item })}
+                                onPress={() => props.navigation.navigate('Store', { item: item })}
                                 style={({ pressed }) => [
-                                    { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                                    { backgroundColor: pressed ? '#D3F2C2' : '#ffffff' }
                                     , styles.center]}
                             >
                                 <View>
                                     <Image
                                         source={{ uri: item.image }}
                                     />
-                                    <Text style={styles.textContainer}>{item.name}</Text>
                                 </View>
+                                <Text style={styles.textContainer}>{item.name}</Text>
                             </Pressable>
                         }
                         keyExtractor={(item, index) => index.toString()}
@@ -60,10 +60,12 @@ const styles = StyleSheet.create({
     },
     center: {
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        height: 60,
+        alignItems: 'center',
     },
     textContainer: {
         padding: 10,
+        color: '#000000',
     },
 });
 
