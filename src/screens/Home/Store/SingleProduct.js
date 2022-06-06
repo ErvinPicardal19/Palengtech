@@ -24,19 +24,21 @@ export default function SingleProduct(props) {
 
     return (
         <View style={styles.container}>
-            <ScrollView style={{ marginBottom: 80, padding: 5 }}>
+            <ScrollView style={{ marginBottom: 80 }}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={{ uri: item.image ? item.image : 'https://pngimg.com/uploads/box/box_PNG49.png' }}
-                        resizeMode="contain"
                         style={styles.image}
+                    />
+                    <View
+                        style={styles.filter}
                     />
                 </View>
                 <View style={styles.contentContainer}>
                     <Text style={styles.contentHeader}>{item.name}</Text>
-                    <Text style={styles.contentText}>{item.description}</Text>
+                    {/* <Text style={styles.contentText}>{item.description}</Text> */}
                 </View>
-                {/* TODO: Description, Rich Desciption and Availability */}
+
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <Text style={styles.price}>₱{item.price}</Text>
@@ -65,6 +67,12 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 250,
     },
+    filter: {
+        backgroundColor: '#00000055',
+        width: '100%',
+        height: 250,
+        position: 'absolute',
+    },
     contentContainer: {
         marginTop: 20,
         justifyContent: 'center',
@@ -81,11 +89,15 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     bottomContainer: {
+        width: '100%',
+        paddingBottom: 80,
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
         flexDirection: 'row',
         position: 'absolute',
         bottom: 0,
         left: 0,
-        backgroundColor: 'white',
+        backgroundColor: 'gainsboro',
     },
     price: {
         fontSize: 24,
@@ -96,5 +108,10 @@ const styles = StyleSheet.create({
 
         justifyContent: 'center',
         marginLeft: (width / 2) - 10,
+    },
+    contentHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
 });

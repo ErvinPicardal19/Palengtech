@@ -17,8 +17,8 @@ import SQLite from 'react-native-sqlite-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ScrollView } from 'react-native-gesture-handler';
 
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setEmail, setPassword } from '../redux/actions.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, setLogged_in } from '../../redux/actions/actions.js';
 
 const db = SQLite.openDatabase(
     {
@@ -31,20 +31,11 @@ const db = SQLite.openDatabase(
 
 export default function ProfileStack({ navigation }) {
 
-    // const { email, pwd } = useSelector(state => state.userReducer);
-    // const dispatch = useDispatch();
+    const { user, logged_in } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
 
-
-    const [User, setUser] = useState({
-        name: '',
-        profile: '',
-        username: '',
-        email: '',
-        phone: null,
-        location: '',
-    });
     const [showLogin, setShowLogin] = useState(false);
-    const [logged_in, setLogged_in] = useState(false);
+    // const [logged_in, setLogged_in] = useState(false);
 
     useEffect(() => {
         createTable();
@@ -82,18 +73,18 @@ export default function ProfileStack({ navigation }) {
                             var myLocation = results.rows.item(0).Location;
 
                             // console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
-                            setUser({
+                            dispatch(setUser({
                                 name: myName,
                                 profile: profilePic,
                                 username: userName,
                                 email: myEmail,
                                 phone: phoneNum,
                                 location: myLocation,
-                            });
-                            setLogged_in(true);
+                            }));
+                            dispatch(setLogged_in(true));
                             setShowLogin(false);
                         } else {
-                            setLogged_in(false);
+                            dispatch(setLogged_in(false));
                             setShowLogin(true);
                         }
                     }
@@ -110,15 +101,15 @@ export default function ProfileStack({ navigation }) {
                 tx.executeSql(
                     'DROP TABLE Users;'
                 );
-                setUser({
+                dispatch(setUser({
                     name: '',
                     profile: null,
                     username: '',
                     email: '',
                     phone: null,
                     location: '',
-                });
-                setLogged_in(false);
+                }));
+                dispatch(setLogged_in(false));
                 ToastAndroid.show('Logged out successfully', ToastAndroid.LONG);
             });
         } catch (err) {
@@ -135,23 +126,21 @@ export default function ProfileStack({ navigation }) {
             <Login
                 showLogin={showLogin}
                 setShowLoginHandler={setShowLoginHandler}
-                setLogged_in={setLogged_in}
-                setUser={setUser}
                 logged_in={logged_in}
             />
             <View style={{ backgroundColor: '#D3F2C2', marginTop: 10 }}>
                 <View style={styles.profileContainer}>
                     <Image
                         style={styles.profile}
-                        source={logged_in ? { uri: User.profile } : require('../../../assets/DefaultProfile.png')}
+                        source={logged_in ? { uri: user.profile } : require('../../../assets/DefaultProfile.png')}
                     />
                     <View style={styles.profileName}>
                         <Text
                             style={{ color: '#2E4323', fontSize: 20, fontFamily: 'Raleway-SemiBold' }}
                         >
-                            {User.name}
+                            {user.name}
                         </Text>
-                        <Text style={styles.username}>{User.username}</Text>
+                        <Text style={styles.username}>{user.username}</Text>
                     </View>
                 </View>
                 <View>
@@ -163,7 +152,7 @@ export default function ProfileStack({ navigation }) {
                                 style={styles.iconSize}
                                 name={'map-marked'}
                             />
-                            <Text style={styles.labelText}>{User.location}</Text>
+                            <Text style={styles.labelText}>{user.location}</Text>
                         </View>
                         <View style={styles.label}>
                             <FontAwesome5
@@ -173,7 +162,7 @@ export default function ProfileStack({ navigation }) {
                                 name={'phone'}
                             />
                             <Text style={styles.labelText}>
-                                {logged_in ? `+63${User.phone}` : null}
+                                {logged_in ? `+63${user.phone}` : null}
                             </Text>
                         </View>
                         <View style={styles.label}>
@@ -183,7 +172,7 @@ export default function ProfileStack({ navigation }) {
                                 style={styles.iconSize}
                                 name={'envelope'}
                             />
-                            <Text style={styles.labelText}>{User.email}</Text>
+                            <Text style={styles.labelText}>{user.email}</Text>
                         </View>
                     </View>
                 </View>
@@ -207,10 +196,12 @@ export default function ProfileStack({ navigation }) {
                 </View>
             </View>
             <View style={styles.settings}>
-                <ScrollView>
+                <ScrollView
+                    contentContainerStyle={{ paddingBottom: 50, backgroundColor: 'white' }}
+                >
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={logged_in ? favoritesHandler : setShowLoginHandler}
                     >
@@ -226,7 +217,7 @@ export default function ProfileStack({ navigation }) {
                     </Pressable>
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
                     >
@@ -242,7 +233,7 @@ export default function ProfileStack({ navigation }) {
                     </Pressable>
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
                     >
@@ -258,7 +249,7 @@ export default function ProfileStack({ navigation }) {
                     </Pressable>
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
                     >
@@ -274,7 +265,7 @@ export default function ProfileStack({ navigation }) {
                     </Pressable>
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={() => { ToastAndroid.show('Under Contruction', ToastAndroid.LONG); }}
                     >
@@ -290,7 +281,7 @@ export default function ProfileStack({ navigation }) {
                     </Pressable>
                     <Pressable
                         style={({ pressed }) => [
-                            { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                            { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
                         onPress={logged_in ? logout : setShowLoginHandler}
                     >

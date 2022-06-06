@@ -19,6 +19,8 @@ target 'AwesomeProject' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'SRSRadialGradient', :path => '../node_modules/react-native-radial-gradient'
+
   target 'AwesomeProjectTests' do
     inherit! :complete
     # Pods for testing

@@ -5,7 +5,10 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/Home/HomeScreen.js';
-import SingleProduct from '../screens/Home/Products/SingleProduct.js';
+import SingleStore from '../screens/Home/Store/SingleStore.js';
+import FavoritesStack from '../screens/Profile/FavoritesStack.js';
+import SingleProduct from '../screens/Home/Store/SingleProduct.js';
+import CheckoutNavigator from './CheckoutNavigator.js';
 
 const Stack = createStackNavigator();
 
@@ -20,11 +23,33 @@ function MyStack() {
                 }}
             />
             <Stack.Screen
-                name="Product"
+                name="Store"
+                component={SingleStore}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="Favorites"
+                component={FavoritesStack}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="SingleProduct"
                 component={SingleProduct}
                 options={{
                     headerShown: false,
                 }}
+            />
+            <Stack.Screen
+                name="Checkout"
+                component={CheckoutNavigator}
+            // options={{
+            //     // headerShown: false,
+            //     headerTintColor: '#000000',
+            // }}
             />
         </Stack.Navigator>
     );

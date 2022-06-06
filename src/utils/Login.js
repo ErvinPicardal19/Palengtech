@@ -25,7 +25,8 @@ import GlobalStyle from './GlobalStyle';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
-// import {  setEmail, setPassword } from '../redux/actions.js';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, setLogged_in } from '../redux/actions/actions.js';
 
 const db = SQLite.openDatabase(
     {
@@ -42,6 +43,8 @@ let email = '';
 let pass = '';
 
 const Login = (props) => {
+    const { user, logged_in } = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
     //Hooks
     const [text, setText] = useState('');
     const [label, setLabel] = useState('Email');
@@ -95,14 +98,14 @@ const Login = (props) => {
             ToastAndroid.show('Incorrect Username or Password', ToastAndroid.LONG);
         } else {
             try {
-                props.setUser({
+                dispatch(setUser({
                     name: user.name,
                     profile: user.img,
                     username: user.username,
                     email: user.email,
                     phone: Number(user.phone),
                     location: user.location,
-                });
+                }));
                 await db.transaction(async (tx) => {
                     await tx.executeSql(
                         "INSERT INTO Users (Name, Profile, Email, Username, Phone, Location) VALUES ('" + user.name + "','" + user.img + "','" + user.email + "','" + user.username + "'," + Number(user.phone) + ",'" + user.location + "');"
@@ -113,7 +116,7 @@ const Login = (props) => {
             } catch (err) {
                 console.log(err);
             }
-            props.setLogged_in(true);
+            dispatch(setLogged_in(true));
         }
         setLabel('Email');
         setPlaceholder('email@gmail.com');

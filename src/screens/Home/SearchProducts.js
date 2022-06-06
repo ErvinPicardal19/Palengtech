@@ -15,7 +15,7 @@ export default function SearchProducts(props) {
     const { productsFiltered } = props;
 
     return (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '100%', height: '100%', backgroundColor: '#FAFAFA' }}>
             {
                 productsFiltered.length > 0 ?
                     <FlatList
@@ -25,9 +25,9 @@ export default function SearchProducts(props) {
                         data={productsFiltered}
                         renderItem={({ item }) =>
                             <Pressable
-                                onPress={() => props.navigation.navigate('Product', { item: item })}
+                                onPress={() => props.navigation.navigate('Store', { item: item })}
                                 style={({ pressed }) => [
-                                    { backgroundColor: pressed ? '#76AB5A' : '#ffffff' }
+                                    { backgroundColor: pressed ? '#D3F2C2' : '#ffffff' }
                                     , styles.center]}
                             >
                                 <View>

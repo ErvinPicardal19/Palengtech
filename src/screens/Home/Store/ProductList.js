@@ -8,22 +8,22 @@ import {
     View,
     Dimensions,
 } from 'react-native';
-import ProductCard from './ProductCard.js';
+
+import ProductCard from './ProductCard';
 
 var { width } = Dimensions.get('window');
 
 export default function ProductList(props) {
-    const { item } = props;
+    const { product } = props;
     return (
-        <TouchableOpacity
-            style={{ width: '50%' }}
-            onPress={() => props.navigation.navigate('Product', { item: item })}
-        >
-            <View style={{ backgroundColor: '#FFFAFA' }}
+        <View style={{ width: width / 2 }}>
+            <View style={{ backgroundColor: 'transparent' }}
             >
-                <ProductCard {...item} />
+                <ProductCard
+                    {...product}
+                    updateTotal={props.updateTotal}
+                />
             </View>
-        </TouchableOpacity>
+        </View>
     );
-
 }

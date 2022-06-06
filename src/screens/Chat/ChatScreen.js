@@ -19,7 +19,9 @@ export default function ChatScreen() {
                 resizeMode="cover"
                 style={{ paddingBottom: 10 }}
             >
-                <Header />
+                <Header
+                    name={'Chat'}
+                />
             </ImageBackground>
             <Text style={styles.text}>Chat Screen</Text>
         </View>

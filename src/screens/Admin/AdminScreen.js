@@ -7,11 +7,15 @@ import {
     View,
     Pressable,
 } from 'react-native';
+import Header from '../../shared/Header';
 
 
 export default function AdminScreen() {
     return (
-        <View style={styles.body}>
+        <View>
+            <Header
+                name={'My Shop'}
+            />
             <Text style={styles.text}>Admin Screen</Text>
         </View>
     );
