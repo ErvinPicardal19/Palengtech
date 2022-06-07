@@ -3,7 +3,7 @@
         "_id": {
             "$oid": "629bb888ae2c5659e53f1c6d"
         },
-        "email": "User1",
+        "email": "User1@gmail.com",
         "username": "@User1",
         "pwd": "User1",
         "name": "John Doe",
@@ -18,7 +18,7 @@
         "_id": {
             "$oid": "629bb89be6120f539f83d044"
         },
-        "email": "User2",
+        "email": "User2@gmail.com",
         "username": "@User2",
         "pwd": "User2",
         "name": "Steven Smith",
@@ -33,7 +33,7 @@
         "_id": {
             "$oid": "629bb89f2f54d8270d9f8b0a"
         },
-        "email": "User3",
+        "email": "User3@gmai.com",
         "username": "@User3",
         "pwd": "User3",
         "name": "John Kingston",

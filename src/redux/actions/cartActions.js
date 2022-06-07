@@ -25,8 +25,8 @@ export const clearCart = () => dispatch => {
     });
 };
 
-export const newRender = () => dispatch => {
-    dispatch({
-        type: NEW_RENDER,
-    });
-};
+// export const newRender = () => dispatch => {
+//     dispatch({
+//         type: NEW_RENDER,
+//     });
+// };

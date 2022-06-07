@@ -18,27 +18,28 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, removeFromCart, clearCart, newRender } from '../redux/actions/cartActions';
+import { setTotal } from '../redux/actions/actions.js';
 
 export default function CartScreen(props) {
 
-    let total = 0;
-    let totalPrice = 0;
-    let totalOrders = 0;
-
     const { cart } = useSelector(state => state.cartItems);
-    const { logged_in } = useSelector(state => state.userReducer);
-    const { ids, setIds } = useState([]);
+    const { logged_in, total } = useSelector(state => state.userReducer);
+    const [totalPrice, setTotalPrice] = useState();
+
     const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     set
-    // }, []);
+    useEffect(() => {
+        getTotal();
+    }, [totalPrice]);
 
-    cart.forEach((item) => {
-        totalPrice += item.price;
-        totalOrders += item.numOfOrder;
-        return (total = totalPrice * totalOrders);
-    });
+    const getTotal = () => {
+        let price = 0;
+        cart.forEach((item) => {
+            price += (item.price * item.numOfOrder);
+        });
+        setTotalPrice(price);
+        dispatch(setTotal(price));
+    };
 
     return (
         <Modal
@@ -70,7 +71,7 @@ export default function CartScreen(props) {
                                                     <TouchableOpacity
                                                         onPress={() => {
                                                             item.numOfOrder += 1;
-                                                            dispatch(newRender());
+                                                            getTotal();
                                                         }}
                                                     >
                                                         <Ionicons
@@ -87,7 +88,7 @@ export default function CartScreen(props) {
                                                             if (item.numOfOrder <= 0) {
                                                                 dispatch(removeFromCart(item));
                                                             } else {
-                                                                dispatch(newRender());
+                                                                getTotal();
                                                             }
                                                         }}
                                                     >

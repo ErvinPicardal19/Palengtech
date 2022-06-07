@@ -21,7 +21,7 @@ import data from '../../../../assets/data/products.json';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, clearCart } from '../../../redux/actions/cartActions.js';
-import { setTotal } from '../../../redux/actions/actions';
+import { setTotal } from '../../../redux/actions/actions.js';
 import CartScreen from '../../../shared/CartScreen';
 
 import { useNavigation } from '@react-navigation/native';
@@ -55,8 +55,7 @@ export default function SingleStore(props) {
     const updateTotal = () => {
         let price = 0;
         cart.forEach((item) => {
-            console.log(price);
-            return (price += item.price);
+            return (price += (item.price * item.numOfOrder));
         });
         dispatch(setTotal(price));
     };

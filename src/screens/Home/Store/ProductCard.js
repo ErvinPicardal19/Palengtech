@@ -71,7 +71,7 @@ export default function ProductCard(props) {
                         }
                         console.log(!includes);
                         if (!includes) {
-                            dispatch(addToCart({ name: name, productID: _id, price: price, numOfOrder: 1 }));
+                            dispatch(addToCart({ name: name, productID: _id, price: price, numOfOrder: 1, img: img }));
                             props.updateTotal(price);
                         } else {
                             ToastAndroid.show('Item is already in the cart', ToastAndroid.LONG);

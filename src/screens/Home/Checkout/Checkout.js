@@ -42,6 +42,7 @@ export default function Checkout(props) {
     const [name, setName] = useState('');
     const [city, setCity] = useState('');
     const [phone, setPhone] = useState('');
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         getInfo();
@@ -60,16 +61,17 @@ export default function Checkout(props) {
     };
 
     const checkOut = () => {
+        const date = new Date();
         let order = {
             city,
-            dateOrdered: Date.now(),
+            dateOrdered: date.getDay().toString() + '/' + date.getMonth().toString() + '/' + date.getFullYear().toString(),
             orderItems,
             phone,
             shippingAddress1: address,
             name,
-        }
+        };
 
-        props.navigation.navigate('Payment', { order: order });
+        props.navigation.navigate('Payment', { order });
     };
 
     return (
@@ -77,10 +79,14 @@ export default function Checkout(props) {
             viewIsInsideTabBar={true}
             extraHeight={100}
             enableOnAndroid={true}
+            style={{ backgroundColor: 'white' }}
+            contentContainerStyle={{ paddingBottom: 100 }}
+            showsVerticalScrollIndicator={false}
         >
-            <FormContainer
-                title={'Shipping Address'}
-            >
+            <View style={styles.header}>
+                <Text style={styles.title}>Choose your payment method</Text>
+            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Input
                     placeholder={'Phone'}
                     name={'Phone'}
@@ -106,27 +112,45 @@ export default function Checkout(props) {
                     value={city}
                     onChangeText={(text) => setCity(text)}
                 />
-                <TouchableOpacity
-                    style={styles.button}
-                    activeOpacity={0.7}
-                >
-                    <Text style={{ color: 'white' }}>CONFIRM</Text>
-                </TouchableOpacity>
-
-            </FormContainer>
-
+                <View style={{ position: 'relative', marginLeft: 200 }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        activeOpacity={0.7}
+                        onPress={() => checkOut()}
+                    >
+                        <Text style={{ color: 'white' }}>Confirm</Text>
+                        <Ionicons
+                            name={'chevron-forward-outline'}
+                            size={23}
+                            color={'white'}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
         </KeyboardAwareScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     button: {
-        width: '80%',
+        flexDirection: 'row',
+        width: 100,
         backgroundColor: '#354D29',
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 15,
         marginTop: 20,
-    }
+    },
+    header: {
+        backgroundColor: '#354D29',
+        height: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        color: 'white',
+        fontSize: 15,
+        fontFamily: 'Raleway-Bold',
+    },
 });

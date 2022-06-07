@@ -46,10 +46,12 @@ function MyStack() {
             <Stack.Screen
                 name="Checkout"
                 component={CheckoutNavigator}
-            // options={{
-            //     // headerShown: false,
-            //     headerTintColor: '#000000',
-            // }}
+                options={{
+                    // headerShown: false,
+                    headerTintColor: 'white',
+                    headerStyle: { backgroundColor: '#354D29' },
+                    headerTitleStyle: { color: 'white' },
+                }}
             />
         </Stack.Navigator>
     );
