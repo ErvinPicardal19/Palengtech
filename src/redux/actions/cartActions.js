@@ -3,7 +3,7 @@
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const CLEAR_CART = 'CLEAR_CART';
-export const NEW_RENDER = 'NEW_RENDER';
+export const BADGE_UPDATE = 'BADGE_UPDATE';
 
 export const addToCart = item => dispatch => {
     dispatch({
@@ -25,8 +25,8 @@ export const clearCart = () => dispatch => {
     });
 };
 
-// export const newRender = () => dispatch => {
-//     dispatch({
-//         type: NEW_RENDER,
-//     });
-// };
+export const updateBadge = () => dispatch => {
+    dispatch({
+        type: BADGE_UPDATE,
+    });
+};

@@ -2,16 +2,26 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, SafeAreaView, View, Text, Dimensions } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import IconBadge from 'react-native-icon-badge';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateBadge } from '../redux/actions/cartActions';
+
 
 const width = Dimensions.get('window').width;
 
 export default function CartBadge(props) {
 
-    const [badgeCount, setBadgeCount] = useState(3);
+    const { badgeNum, cart } = useSelector(state => state.cartItems);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(updateBadge());
+    }, [cart.length, dispatch]);
+
+    // const [badgeCount, setBadgeCount] = useState(3)
 
     return (
         <IconBadge
@@ -30,7 +40,7 @@ export default function CartBadge(props) {
                 />
             }
             BadgeElement={
-                <Text style={{ color: '#FFFFFF', fontSize: 10 }}>{badgeCount}</Text>
+                <Text style={{ color: '#FFFFFF', fontSize: 10 }}>{badgeNum}</Text>
             }
             IconBadgeStyle={
                 {
@@ -41,7 +51,7 @@ export default function CartBadge(props) {
                     backgroundColor: 'red',
                 }
             }
-            Hidden={badgeCount === 0}
+            Hidden={badgeNum === 0}
         />
     );
 }

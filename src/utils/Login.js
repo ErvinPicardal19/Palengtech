@@ -43,7 +43,7 @@ let email = '';
 let pass = '';
 
 const Login = (props) => {
-    const { user, logged_in } = useSelector(state => state.userReducer);
+    // const { user, logged_in } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
     //Hooks
     const [text, setText] = useState('');

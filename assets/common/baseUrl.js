@@ -5,15 +5,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 
-import { Platform } from "react-native";
+import { Platform } from 'react-native';
 
-let baseURL = '';
+let baseUrl = '';
 
 {
     Platform.OS === 'android' ?
-        baseURL = 'http://192.168.1.57:5000/api/v1/'
+        baseUrl = 'http://192.168.1.57:5000/api/v1'
         :
-        baseURL = 'http://localhost:5000/api/v1/';
+        baseUrl = 'http://localhost:5000/api/v1';
 }
 
-export default baseURL;
+export default baseUrl;
