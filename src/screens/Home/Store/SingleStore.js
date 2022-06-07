@@ -25,6 +25,8 @@ import { setTotal } from '../../../redux/actions/actions.js';
 import CartScreen from '../../../shared/CartScreen';
 
 import { useNavigation } from '@react-navigation/native';
+import baseUrl from '../../../../assets/common/baseUrl';
+import axios from 'axios';
 
 var { width } = Dimensions.get('window');
 
@@ -48,8 +50,15 @@ export default function SingleStore(props) {
     };
 
     useEffect(() => {
-        getProducts();
+        // getProducts();
         updateTotal();
+
+        axios
+            .get(`${baseUrl}/product/${store._id}`)
+            .then((res) => {
+                setProducts(res.data);
+            });
+
     }, [cart.length]);
 
     const updateTotal = () => {
@@ -69,16 +78,16 @@ export default function SingleStore(props) {
         }, 1000);
     };
 
-    const getProducts = () => {
-        // console.log(i.OwnerID.$oid, store._id.$oid);
-        setProducts(data.filter((i) => {
-            if (i.OwnerID.$oid === store._id.$oid) {
-                console.log(i.OwnerID.$oid, store._id.$oid);
-                return i;
-            }
-        }));
-        // console.log(products);
-    };
+    // const getProducts = () => {
+    //     // console.log(i.OwnerID.$oid, store._id.$oid);
+    //     setProducts(data.filter((i) => {
+    //         if (i.OwnerID.$oid === store._id.$oid) {
+    //             console.log(i.OwnerID.$oid, store._id.$oid);
+    //             return i;
+    //         }
+    //     }));
+    //     // console.log(products);
+    // };
 
 
     const ShopBanner = () => {

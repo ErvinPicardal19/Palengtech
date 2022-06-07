@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-lone-blocks */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
@@ -16,21 +17,37 @@ import {
     Image,
     Animated,
 } from 'react-native';
-// import { Picker } from '@react-native-picker/picker';
-// import { Container, Header, Icon, Item, Input, Text } from 'native-base';
+
+
+
 import SearchBar from 'react-native-dynamic-search-bar';
 import CategoryFilter from './CategoryFilter.js';
 import StoreList from './StoreList.js';
 
 import Carousel from 'react-native-banner-carousel';
-// import Animated from 'react-native-reanimated';
+
 import SearchProducts from './SearchProducts.js';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setHideSearch } from '../../redux/actions/actions.js';
 import Header from '../../shared/Header.js';
 
-const data = require('../../../assets/data/shop.json');
+import baseUrl from '../../../assets/common/baseUrl.js';
+import axios from 'axios';
+import SQLite from 'react-native-sqlite-storage';
+import { setUser, setLogged_in } from '../../redux/actions/actions.js';
+import Login from '../../utils/Login.js';
+
+const db = SQLite.openDatabase(
+    {
+        name: 'MainDB',
+        location: 'default',
+    },
+    () => { },
+    (error) => { console.log(error); }
+);
+
+// const data = require('../../../assets/data/shop.json');
 const Categories = require('../../../assets/data/category.json');
 
 const bannerImages = [
@@ -45,7 +62,7 @@ const BannerHeight = 260;
 
 export default function HomeScreen({ navigation }) {
 
-    const { hideSearch } = useSelector(state => state.userReducer);
+    const { hideSearch, logged_in } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
     const [products, setProducts] = useState([]);
@@ -57,16 +74,23 @@ export default function HomeScreen({ navigation }) {
     const [initialState, setInitialState] = useState([]);
     const [Refreshing, setRefreshing] = useState(false);
     const [pos, setPos] = useState(0);
+    const [showLogin, setShowLogin] = useState(false);
     // const [hideSearch, setHideSearch] = useState(false);
 
     useEffect(() => {
-        setProducts(data);
-        setProductsFiltered(data);
         setFocus(false);
         setCategories(Categories);
-        setProductsCtg(data);
         setActive(-1);
-        setInitialState(data);
+        getInfo();
+
+        axios
+            .get(`${baseUrl}/shop`)
+            .then((res) => {
+                setProducts(res.data);
+                setProductsFiltered(res.data);
+                setProductsCtg(res.data);
+                setInitialState(res.data);
+            });
 
         return () => {
             setProducts([]);
@@ -77,6 +101,46 @@ export default function HomeScreen({ navigation }) {
             setInitialState([]);
         };
     }, []);
+
+    const getInfo = () => {
+        try {
+            db.transaction((tx) => {
+                tx.executeSql(
+                    'SELECT Name, Profile, Email, Username, Phone, Location FROM Users',
+                    [],
+                    (_tx, results) => {
+                        console.log(results.rows.item(0));
+                        var len = results.rows.length;
+                        if (len > 0) {
+                            var myName = results.rows.item(0).Name;
+                            var profilePic = results.rows.item(0).Profile;
+                            var userName = results.rows.item(0).Username;
+                            var myEmail = results.rows.item(0).Email;
+                            var phoneNum = results.rows.item(0).Phone;
+                            var myLocation = results.rows.item(0).Location;
+
+                            // console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
+                            dispatch(setUser({
+                                name: myName,
+                                profile: profilePic,
+                                username: userName,
+                                email: myEmail,
+                                phone: phoneNum,
+                                location: myLocation,
+                            }));
+                            dispatch(setLogged_in(true));
+                            setShowLogin(false);
+                        } else {
+                            dispatch(setLogged_in(false));
+                            setShowLogin(true);
+                        }
+                    }
+                );
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -127,7 +191,7 @@ export default function HomeScreen({ navigation }) {
                     setProductsCtg(
                         products.filter((i) => {
                             // console.log('Category_ID:' + i.category.$oid + '\tCtg:' + ctg.$oid);
-                            if (i.category.$oid === ctg.$oid) {
+                            if (i.category.categoryID === ctg.$oid) {
                                 return i;
                             }
                         }),
@@ -137,10 +201,19 @@ export default function HomeScreen({ navigation }) {
         // console.log(productsCtg);
     };
 
+    const setShowLoginHandler = () => {
+        setShowLogin(!showLogin);
+    };
+
 
     const Banner = () => {
         return (
             <View>
+                <Login
+                    showLogin={showLogin}
+                    setShowLoginHandler={setShowLoginHandler}
+                    logged_in={logged_in}
+                />
                 <Carousel
                     autoplay
                     autoplayTimeout={5000}

@@ -1,7 +1,7 @@
 [
     {
         "_id": {
-            "$oid": "629b8f9d7c008541dca8648c"
+            "shopID": "629b8f9d7c008541dca8648c"
         },
         "countInStock": 13,
         "name": "Kamote",
@@ -11,14 +11,14 @@
         "numReviews": 1,
         "rating": 4,
         "isFeatured": true,
-        "OwnerID": {
-            "$oid": "62951dcec04446d4e72d1d0e"
+        "shop": {
+            "shopID": "629f0cc00373fbed8035fa60"
         },
         "__v": 0
     },
     {
         "_id": {
-            "$oid": "629b8fa3ce496d70a145b548"
+            "shopID": "629b8fa3ce496d70a145b548"
         },
         "countInStock": 13,
         "name": "Pork",
@@ -28,42 +28,42 @@
         "numReviews": 1,
         "rating": 4,
         "isFeatured": true,
-        "OwnerID": {
-            "$oid": "6295265f43ee2a74b9ab756e"
+        "shop": {
+            "shopID": "629f0d240373fbed8035fa62"
         },
         "__v": 1
     },
     {
         "_id": {
-            "$oid": "629b8fab4e18bad1b0ecb1fe"
+            "shopID": "629b8fab4e18bad1b0ecb1fe"
         },
         "countInStock": 13,
-        "name": "Manok",
-        "img": "https://thumbs.dreamstime.com/b/fresh-raw-chicken-isolated-white-85897118.jpg",
-        "description": "Fresh Chicken",
+        "name": "Bigas",
+        "img": "https://ph-test-11.slatic.net/p/438afb889b3b1e3fdc68b77f01124737.jpg",
+        "description": "Jasmine Rice",
         "price": 250,
         "numReviews": 1,
         "rating": 4,
         "isFeatured": true,
-        "OwnerID": {
-            "$oid": "629526eead02b4d2f288131d"
+        "shop": {
+            "shopID": "629f0d510373fbed8035fa65"
         },
         "__v": 2
     },
     {
         "_id": {
-            "$oid": "629bc73d4bd651ff3930f04a"
+            "shopID": "629bc73d4bd651ff3930f04a"
         },
         "countInStock": 6,
         "name": "Pechay",
         "img": "https://meatmyveggies.com/wp-content/uploads/2021/05/pechay.jpg",
-        "description": "Fresh Chicken",
+        "description": "Fresh Pechay",
         "price": 1000,
         "numReviews": 1,
         "rating": 4,
         "isFeatured": true,
-        "OwnerID": {
-            "$oid": "62951dcec04446d4e72d1d0e"
+        "shop": {
+            "shopID": "629f0cc00373fbed8035fa60"
         },
         "__v": 3
     }

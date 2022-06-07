@@ -61,8 +61,8 @@ export default function ProductCard(props) {
                     onPress={() => {
                         let includes = false;
                         for (let i of cart) {
-                            console.log(i.productID.$oid, _id.$oid);
-                            if (i.productID.$oid === _id.$oid) {
+                            console.log(i.productID, _id);
+                            if (i.productID === _id) {
                                 includes = true;
                                 break;
                             } else {
@@ -74,7 +74,7 @@ export default function ProductCard(props) {
                             dispatch(addToCart({ name: name, productID: _id, price: price, numOfOrder: 1, img: img }));
                             props.updateTotal(price);
                         } else {
-                            ToastAndroid.show('Item is already in the cart', ToastAndroid.LONG);
+                            ToastAndroid.show('Item is already in the cart', ToastAndroid.SHORT);
                         }
                     }
                     }

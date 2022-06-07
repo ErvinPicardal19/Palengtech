@@ -60,7 +60,7 @@ export default function CartScreen(props) {
                                     cart.map((item) => {
                                         const num = item.numOfOrder;
                                         return (
-                                            <View style={styles.itemContainer} key={item.productID.$oid}>
+                                            <View style={styles.itemContainer} key={item.productID}>
                                                 <View>
                                                     <Text style={{ marginLeft: 5, color: 'black', fontFamily: 'Raleway-Regular' }}>{item.name}</Text>
                                                 </View>

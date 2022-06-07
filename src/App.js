@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Animated,
@@ -20,7 +20,7 @@ import ChatScreen from './screens/Chat/ChatScreen.js';
 import AdminScreen from './screens/Admin/AdminScreen.js';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5.js';
+// import FontAwesome5 from 'react-native-vector-icons/FontAwesome5.js';
 
 import { Provider } from 'react-redux';
 import { Store } from './redux/store.js';
@@ -29,6 +29,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AnimatedTabBar, { TabsConfigsType } from 'curved-bottom-navigation-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
 const tabs = {
   Shop: {
     icon: ({ progress, focused }) => {
@@ -72,7 +73,7 @@ const tabs = {
       );
     },
   },
-}
+};
 
 const Tab = createBottomTabNavigator();
 

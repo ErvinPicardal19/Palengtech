@@ -10,7 +10,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { clearCart } from '../../../redux/actions/cartActions.js';
 
-const { height } = Dimensions.get('window')
+import axios from 'axios';
+import baseUrl from '../../../../assets/common/baseUrl.js';
+
+const { height } = Dimensions.get('window');
 
 export default function Confirm(props) {
 
@@ -19,11 +22,34 @@ export default function Confirm(props) {
     //Connecting to server
     const confirmOrder = () => {
 
+        const order = {
+            city: confirm.order.order.city,
+            name: confirm.order.order.name,
+            phone: confirm.order.order.phone,
+            isDelivered: false,
+            date: confirm.order.order.dateOrdered,
+            address: confirm.order.order.shippingAddress1,
+            payment: {
+                paymentOption: 2,
+                paymentMethod: 2,
+            },
+            total: total,
+            user: {
+                userID: '629bb888ae2c5659e53f1c6d',
+            },
+        };
 
-        setTimeout(() => {
-            dispatch(clearCart());
-            props.navigation.navigate('Home');
-        }, 500);
+        axios
+            .post(`${baseUrl}/order`, order)
+            .then((res) => {
+                console.log(res.data);
+            });
+        dispatch(clearCart());
+        props.navigation.navigate('Home');
+        // setTimeout(() => {
+        //     dispatch(clearCart());
+        //     props.navigation.navigate('Home');
+        // }, 500);
     };
 
     const { total } = useSelector(state => state.userReducer);
