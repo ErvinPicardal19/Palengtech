@@ -11,11 +11,11 @@ const AxiosProvider = ({ children }) => {
     const authContext = useContext(AuthContext);
 
     const authAxios = axios.create({
-        baseURL: 'http://192.168.1.57:5000/api/v1',
+        baseURL: 'https://palengtech-server.herokuapp.com/api/v1',
     });
 
     const publicAxios = axios.create({
-        baseURL: 'http://192.168.1.57:5000',
+        baseURL: 'https://palengtech-server.herokuapp.com',
     });
 
     authAxios.interceptors.request.use(
@@ -41,7 +41,7 @@ const AxiosProvider = ({ children }) => {
         const options = {
             method: 'POST',
             data,
-            url: 'http://192.168.1.57:5000/refresh',
+            url: 'https://palengtech-server.herokuapp.com/refresh',
         };
         console.log('Getting Refresh Token');
         return axios(options)
