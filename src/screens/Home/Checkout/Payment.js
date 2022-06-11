@@ -11,7 +11,10 @@ import {
     TouchableOpacity,
     StyleSheet,
     Pressable,
+    Dimensions,
 } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 import RadioButtonRN from 'radio-buttons-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -68,12 +71,16 @@ export default function Payment(props) {
                             <View key={item.name}>
                                 <Pressable
                                     style={({ pressed }) => [
-                                        { backgroundColor: pressed ? 'gainsboro' : 'white' },
+                                        { backgroundColor: selected === item.value ? '#76AB5A' : 'white' },
                                         styles.buttonContainer,
                                     ]}
                                     onPress={() => setSelected(item.value)}
                                 >
-                                    <Text style={{ color: 'black', fontFamily: 'Raleway-Regular' }}>{item.name}</Text>
+                                    <Text style={{
+                                        color: selected === item.value ? 'white' : 'black', fontFamily: 'Raleway-Regular'
+                                    }}>
+                                        {item.name}
+                                    </Text>
                                 </Pressable>
                                 {
                                     selected === 1 ?
@@ -104,25 +111,22 @@ export default function Payment(props) {
                         );
                     })
                 }
-                <View style={styles.backContainer}>
+                <View style={styles.confirmContainer}>
                     <TouchableOpacity
                         style={styles.backButton}
                         activeOpacity={0.7}
                         onPress={() => props.navigation.navigate('Address')}
                     >
-                        <Text style={{ color: 'white' }}>Back</Text>
                         <Ionicons
-                            name={'chevron-back-outline'}
-                            size={23}
+                            nam e={23}
                             color={'white'}
                         />
+                        <Text style={{ color: 'white' }}>Back</Text>
                     </TouchableOpacity>
-                </View>
-                <View style={styles.confirmContainer}>
                     <TouchableOpacity
                         style={styles.confirmButton}
                         activeOpacity={0.7}
-                        onPress={() => props.navigation.navigate('Confirm', { order })}
+                        onPress={() => props.navigation.navigate('Confirm', { order, paymentOption: selected, paymentMethod: selected === 'Cash on Delivery' ? 'Cash' : payment })}
                     >
                         <Text style={{ color: 'white' }}>Confirm</Text>
                         <Ionicons
@@ -159,29 +163,32 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
     },
     picker: {
-        backgroundColor: '#F1F1F1',
+        backgroundColor: '#f1f1f1',
         color: 'black',
     },
     confirmButton: {
         flexDirection: 'row',
         backgroundColor: '#354D29',
         height: 50,
+        width: 100,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 15,
         marginTop: 20,
     },
     confirmContainer: {
+        flexDirection: 'row',
         position: 'absolute',
-        width: 100,
-        height: 50,
-        marginTop: 300,
-        marginLeft: 230,
+        width: width,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        marginTop: '80%',
     },
     backButton: {
         flexDirection: 'row',
         backgroundColor: '#354D29',
         height: 50,
+        width: 100,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 15,

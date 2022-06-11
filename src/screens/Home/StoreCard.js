@@ -15,8 +15,8 @@ import {
 var { width } = Dimensions.get('window');
 
 export default function StoreCard(props) {
-    const { name, description, image, countInStock, address } = props;
-
+    const { _id, name, description, image, countInStock, address } = props;
+    // console.log(image);
     return (
         <View style={{ backgroundColor: 'white', margin: 10, borderRadius: 15, paddingBottom: 20, elevation: 8 }}>
             <ImageBackground

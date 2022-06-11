@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -11,107 +11,50 @@ import {
     Image,
     ToastAndroid,
 } from 'react-native';
-import Login from '../../utils/Login.js';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import SQLite from 'react-native-sqlite-storage';
+// import Login from '../../utils/Login.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import SQLite from 'react-native-sqlite-storage';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { AuthContext } from '../../context/AuthContext';
+import { AxiosContext } from '../../context/AxiosContext';
+// import { AuthContext } from '../../context/AuthContext.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setLogged_in } from '../../redux/actions/actions.js';
 
-const db = SQLite.openDatabase(
-    {
-        name: 'MainDB',
-        location: 'default',
-    },
-    () => { },
-    (error) => { console.log(error); }
-);
+// const db = SQLite.openDatabase(
+//     {
+//         name: 'MainDB',
+//         location: 'default',
+//     },
+//     () => { },
+//     (error) => { console.log(error); }
+// );
 
 export default function ProfileStack({ navigation }) {
 
-    const { user, logged_in } = useSelector(state => state.userReducer);
+    const authContext = useContext(AuthContext);
+    const { authAxios } = useContext(AxiosContext);
+
+    const { user } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
-    const [showLogin, setShowLogin] = useState(false);
-    // const [logged_in, setLogged_in] = useState(false);
-
     useEffect(() => {
-        createTable();
-        getData();
-    }, [logged_in]);
+        getUser();
+    }, []);
 
-    const createTable = () => {
-        db.transaction((tx) => {
-            tx.executeSql(
-                'CREATE TABLE IF NOT EXISTS Users(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Profile BLOB, Email TEXT, Username Text, Phone INTEGER, Location TEXT);'
-            );
-        }
-        );
-    };
-
-    const setShowLoginHandler = () => {
-        setShowLogin(!showLogin);
-    };
-
-    const getData = () => {
-        try {
-            db.transaction((tx) => {
-                tx.executeSql(
-                    'SELECT Name, Profile, Email, Username, Phone, Location FROM Users',
-                    [],
-                    (_tx, results) => {
-                        console.log(results.rows.item(0));
-                        var len = results.rows.length;
-                        if (len > 0) {
-                            var myName = results.rows.item(0).Name;
-                            var profilePic = results.rows.item(0).Profile;
-                            var userName = results.rows.item(0).Username;
-                            var myEmail = results.rows.item(0).Email;
-                            var phoneNum = results.rows.item(0).Phone;
-                            var myLocation = results.rows.item(0).Location;
-
-                            // console.log(myName, profilePic, myEmail, userName, phoneNum, myLocation);
-                            dispatch(setUser({
-                                name: myName,
-                                profile: profilePic,
-                                username: userName,
-                                email: myEmail,
-                                phone: phoneNum,
-                                location: myLocation,
-                            }));
-                            dispatch(setLogged_in(true));
-                            setShowLogin(false);
-                        } else {
-                            dispatch(setLogged_in(false));
-                            setShowLogin(true);
-                        }
-                    }
-                );
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    const getUser = async () => {
+        await AsyncStorage.getItem('user').then(async (uid) => {
+            await authAxios.get(`/user/${uid}`).then((res) => {
+                dispatch(setUser(res.data))
+            })
+        })
+    }
 
     const logout = () => {
         try {
-            db.transaction((tx) => {
-                tx.executeSql(
-                    'DROP TABLE Users;'
-                );
-                dispatch(setUser({
-                    name: '',
-                    profile: null,
-                    username: '',
-                    email: '',
-                    phone: null,
-                    location: '',
-                }));
-                dispatch(setLogged_in(false));
-                ToastAndroid.show('Logged out successfully', ToastAndroid.LONG);
-            });
+            authContext.logout();
+            // });
         } catch (err) {
             console.log(err);
         }
@@ -120,19 +63,19 @@ export default function ProfileStack({ navigation }) {
     const favoritesHandler = () => {
         navigation.navigate('Favorites');
     };
-
+    console.log(user.profilePic)
     return (
         <View style={styles.body}>
-            <Login
+            {/* <Login
                 showLogin={showLogin}
                 setShowLoginHandler={setShowLoginHandler}
-                logged_in={logged_in}
-            />
+                user={user}
+            /> */}
             <View style={{ backgroundColor: '#D3F2C2', marginTop: 10 }}>
                 <View style={styles.profileContainer}>
                     <Image
                         style={styles.profile}
-                        source={logged_in ? { uri: user.profile } : require('../../../assets/DefaultProfile.png')}
+                        source={user ? { uri: user.profilePic } : require('../../../assets/DefaultProfile.png')}
                     />
                     <View style={styles.profileName}>
                         <Text
@@ -162,7 +105,7 @@ export default function ProfileStack({ navigation }) {
                                 name={'phone'}
                             />
                             <Text style={styles.labelText}>
-                                {logged_in ? `+63${user.phone}` : null}
+                                {user ? `+63${user.phone}` : null}
                             </Text>
                         </View>
                         <View style={styles.label}>
@@ -180,7 +123,7 @@ export default function ProfileStack({ navigation }) {
             <View style={styles.transactionView}>
                 <View style={styles.transactionContainer}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
-                        {logged_in ? '₱150' : '₱0'}
+                        {user ? '₱150' : '₱0'}
                     </Text>
                     <Text style={{ fontSize: 12, color: '#354D29' }}>
                         Wallet
@@ -188,7 +131,7 @@ export default function ProfileStack({ navigation }) {
                 </View>
                 <View style={styles.transactionContainer}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#7EA16B' }}>
-                        {logged_in ? '12' : '0'}
+                        {user ? '12' : '0'}
                     </Text>
                     <Text style={{ fontSize: 12, color: '#354D29' }}>
                         Orders
@@ -203,7 +146,7 @@ export default function ProfileStack({ navigation }) {
                         style={({ pressed }) => [
                             { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
-                        onPress={logged_in ? favoritesHandler : setShowLoginHandler}
+                        onPress={user ? favoritesHandler : setShowLoginHandler}
                     >
                         <View style={styles.settings_contents}>
                             <FontAwesome5
@@ -283,17 +226,17 @@ export default function ProfileStack({ navigation }) {
                         style={({ pressed }) => [
                             { backgroundColor: pressed ? 'gainsboro' : '#ffffff' }
                             , styles.settings_contents]}
-                        onPress={logged_in ? logout : setShowLoginHandler}
+                        onPress={user ? logout : setShowLoginHandler}
                     >
                         <View style={styles.settings_contents}>
                             <FontAwesome5
                                 color={'#FF5714'}
                                 size={18}
                                 style={styles.settings_contents_margin}
-                                name={logged_in ? 'sign-out-alt' : 'sign-in-alt'}
+                                name={user ? 'sign-out-alt' : 'sign-in-alt'}
                             />
                             <Text style={styles.settings_contents_text}>
-                                {logged_in ? 'Logout' : 'Login'}
+                                {user ? 'Logout' : 'Login'}
                             </Text>
                         </View>
                     </Pressable>

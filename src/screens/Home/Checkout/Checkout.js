@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     Text,
     View,
@@ -13,36 +13,32 @@ import {
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FormContainer from '../../../shared/Form/FormContainer';
+// import FormContainer from '../../../shared/Form/FormContainer';
 import Input from '../../../shared/Form/Input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import SQLite from 'react-native-sqlite-storage';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-
-const db = SQLite.openDatabase(
-    {
-        name: 'MainDB',
-        location: 'default',
-    },
-    () => { },
-    (error) => { console.log(error); }
-);
+import { AuthContext } from '../../../context/AuthContext';
+import { AxiosContext } from '../../../context/AxiosContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 export default function Checkout(props) {
 
+    const authContext = useContext(AuthContext)
+    const { authAxios } = useContext(AxiosContext)
+
     const { cart } = useSelector(state => state.cartItems);
-    const { user } = useSelector(state => state.userReducer);
+    // const { user } = useSelector(state => state.userReducer);
 
     const [orderItems, setOrderItems] = useState();
     const [address, setAddress] = useState('');
     const [name, setName] = useState('');
     const [city, setCity] = useState('');
     const [phone, setPhone] = useState('');
-    const [total, setTotal] = useState(0);
+    const [user, setUser] = useState();
 
     useEffect(() => {
         getInfo();
@@ -54,21 +50,29 @@ export default function Checkout(props) {
         };
     }, []);
 
-    const getInfo = () => {
-        setName(user.name);
-        setPhone(user.phone);
-        setCity(user.location);
+    const getInfo = async () => {
+
+        await AsyncStorage.getItem('user').then(async (id) => {
+            await authAxios.get(`/user/${id}`).then((res) => {
+                setName(res.data.name);
+                setPhone(res.data.phone);
+                setCity(res.data.location);
+                setUser(id);
+            })
+
+        })
+
     };
 
     const checkOut = () => {
         const date = new Date();
         let order = {
             city,
-            dateOrdered: date.getDay().toString() + '/' + date.getMonth().toString() + '/' + date.getFullYear().toString(),
             orderItems,
             phone,
             shippingAddress1: address,
             name,
+            user,
         };
 
         props.navigation.navigate('Payment', { order });
@@ -112,7 +116,7 @@ export default function Checkout(props) {
                     value={city}
                     onChangeText={(text) => setCity(text)}
                 />
-                <View style={{ position: 'relative', marginLeft: 200 }}>
+                <View style={{ position: 'relative', marginLeft: '60%' }}>
                     <TouchableOpacity
                         style={styles.button}
                         activeOpacity={0.7}

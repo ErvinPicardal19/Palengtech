@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Image,
     View,
@@ -17,20 +17,23 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import ProductList from './ProductList';
 
-import data from '../../../../assets/data/products.json';
-
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, clearCart } from '../../../redux/actions/cartActions.js';
+// import { addToCart, clearCart } from '../../../redux/actions/cartActions.js';
 import { setTotal } from '../../../redux/actions/actions.js';
 import CartScreen from '../../../shared/CartScreen';
 
 import { useNavigation } from '@react-navigation/native';
-import baseUrl from '../../../../assets/common/baseUrl';
-import axios from 'axios';
+import { AuthContext } from '../../../context/AuthContext';
+import * as Keychain from 'react-native-keychain';
+import { AxiosContext } from '../../../context/AxiosContext';
 
 var { width } = Dimensions.get('window');
 
 export default function SingleStore(props) {
+
+    const authContext = useContext(AuthContext);
+    const { authAxios } = useContext(AxiosContext);
+
     const store = props.route.params.item;
     const navigation = useNavigation();
 
@@ -53,10 +56,12 @@ export default function SingleStore(props) {
         // getProducts();
         updateTotal();
 
-        axios
-            .get(`${baseUrl}/product/${store._id}`)
+        authAxios
+            .get(`/product/${store._id}`)
             .then((res) => {
                 setProducts(res.data);
+            }).catch((e) => {
+                console.error(e);
             });
 
     }, [cart.length]);
@@ -130,6 +135,7 @@ export default function SingleStore(props) {
                                     key={item.description}
                                     product={item}
                                     updateTotal={updateTotal}
+                                    store={store}
                                 />
                                 }
                                 keyExtractor={(product, index) => index}
@@ -220,9 +226,10 @@ const styles = StyleSheet.create({
     },
     checkoutButton: {
         flexDirection: 'row',
-        left: 200,
-        top: 10,
-        justifyContent: 'center',
+        width: '100%',
+        height: 70,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
         position: 'absolute',
     },
 });

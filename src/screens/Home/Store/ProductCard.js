@@ -24,7 +24,7 @@ export default function ProductCard(props) {
     const dispatch = useDispatch();
 
 
-    const { _id, countInStock, name, img, description, price, numReviews, rating, isFeatured, OwnerID, __v } = props;
+    const { _id, countInStock, name, img, description, price, numReviews, rating, isFeatured, shop, __v } = props;
 
     return (
         <View style={{ margin: 5, borderRadius: 25, elevation: 25 }}>
@@ -69,9 +69,9 @@ export default function ProductCard(props) {
                                 includes = false;
                             }
                         }
-                        console.log(!includes);
+                        // console.log(!includes);
                         if (!includes) {
-                            dispatch(addToCart({ name: name, productID: _id, price: price, numOfOrder: 1, img: img }));
+                            dispatch(addToCart({ name: name, productID: _id, price: price, numOfOrder: 1, img: img, shop: props.store._id }));
                             props.updateTotal(price);
                         } else {
                             ToastAndroid.show('Item is already in the cart', ToastAndroid.SHORT);
@@ -102,12 +102,13 @@ const styles = StyleSheet.create({
     },
     price: {
         flexDirection: 'row',
-        marginTop: 150,
-        marginLeft: 80,
+        marginTop: '90%',
+        marginLeft: '50%',
         backgroundColor: 'white',
         padding: 5,
         elevation: 15,
-        width: 80,
+        width: 70,
+        height: 20,
         borderRadius: 30,
         position: 'absolute',
     },
@@ -121,11 +122,11 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
         position: 'absolute',
-        marginLeft: 85,
+        marginLeft: '52%',
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         marginTop: 130,
-        width: 70,
+        width: 40,
         backgroundColor: '#354D2999',
         paddingBottom: 10,
         paddingLeft: 10,

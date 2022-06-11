@@ -22,7 +22,7 @@ export default function StoreList(props) {
             backgroundColor={'transparent'}
             onPress={() => props.navigation.navigate('Store', { item: item })}
         >
-            <View style={{ backgroundColor: 'transparent', width: width }}
+            <View style={{ backgroundColor: 'white', width: width }}
             >
                 <StoreCard {...item} />
             </View>

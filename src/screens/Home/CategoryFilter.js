@@ -18,7 +18,7 @@ export default function CategoryFilter(props) {
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingRight: 20 }}
-            style={{ backgroundColor: '#f2f2f2', padding: 10, borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}
+            style={{ backgroundColor: '#f2f2f2', padding: 10, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
         >
             <TouchableOpacity
                 key={1}

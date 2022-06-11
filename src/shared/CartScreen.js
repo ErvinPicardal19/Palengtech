@@ -19,8 +19,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToCart, removeFromCart, clearCart, newRender } from '../redux/actions/cartActions';
 import { setTotal } from '../redux/actions/actions.js';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CartScreen(props) {
+
+    const navigation = useNavigation();
 
     const { cart } = useSelector(state => state.cartItems);
     const { logged_in, total } = useSelector(state => state.userReducer);
@@ -58,7 +61,6 @@ export default function CartScreen(props) {
                             <ScrollView>
                                 {
                                     cart.map((item) => {
-                                        const num = item.numOfOrder;
                                         return (
                                             <View style={styles.itemContainer} key={item.productID}>
                                                 <View>
@@ -121,7 +123,7 @@ export default function CartScreen(props) {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 backgroundColor={'transparent'}
-                                onPress={() => logged_in ? props.navigation.navigate('Checkout') : ToastAndroid.show('Please login first', ToastAndroid.SHORT)}
+                                onPress={() => navigation.navigate('Checkout')}
                             >
                                 <Text style={{ color: '#48B9F1', fontFamily: 'Raleway-Regular' }}>CHECKOUT</Text>
                             </TouchableOpacity>

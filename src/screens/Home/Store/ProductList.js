@@ -22,6 +22,7 @@ export default function ProductList(props) {
                 <ProductCard
                     {...product}
                     updateTotal={props.updateTotal}
+                    store={props.store}
                 />
             </View>
         </View>

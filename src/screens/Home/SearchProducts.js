@@ -30,12 +30,8 @@ export default function SearchProducts(props) {
                                     { backgroundColor: pressed ? '#D3F2C2' : '#ffffff' }
                                     , styles.center]}
                             >
-                                <View>
-                                    <Image
-                                        source={{ uri: item.image }}
-                                    />
-                                </View>
                                 <Text style={styles.textContainer}>{item.name}</Text>
+                                <Text style={styles.address}>{item.address.length > 40 ? item.address.substring(0, 40) + '...' : item.address}</Text>
                             </Pressable>
                         }
                         keyExtractor={(item, index) => index.toString()}
@@ -59,13 +55,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     center: {
-        flexDirection: 'row',
         height: 60,
-        alignItems: 'center',
+        width: '100%',
     },
     textContainer: {
-        padding: 10,
+        padding: 5,
         color: '#000000',
+    },
+    address: {
+        color: '#00000044',
+        paddingLeft: 5,
     },
 });
 

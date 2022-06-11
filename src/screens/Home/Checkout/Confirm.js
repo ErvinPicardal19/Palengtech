@@ -3,44 +3,48 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { View, Text, StyleSheet, Dimensions, ScrollView, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { clearCart } from '../../../redux/actions/cartActions.js';
 
-import axios from 'axios';
-import baseUrl from '../../../../assets/common/baseUrl.js';
+import { AuthContext } from '../../../context/AuthContext.js';
+import { AxiosContext } from '../../../context/AxiosContext.js';
 
 const { height } = Dimensions.get('window');
 
 export default function Confirm(props) {
+
+    const { authAxios } = useContext(AxiosContext);
 
     const dispatch = useDispatch();
 
     //Connecting to server
     const confirmOrder = () => {
 
+        const orderedItems = confirm.order.order.orderItems.map((orderId) => {
+            return { quantity: orderId.numOfOrder, product: orderId.productID }
+        })
+
+        console.log(confirm.paymentOption, confirm.paymentMethod);
+
         const order = {
             city: confirm.order.order.city,
-            name: confirm.order.order.name,
+            user: confirm.order.order.user,
             phone: confirm.order.order.phone,
-            isDelivered: false,
-            date: confirm.order.order.dateOrdered,
             address: confirm.order.order.shippingAddress1,
             payment: {
-                paymentOption: 2,
-                paymentMethod: 2,
+                paymentOption: confirm.paymentOption,
+                paymentMethod: confirm.paymentMethod,
             },
-            total: total,
-            user: {
-                userID: '629bb888ae2c5659e53f1c6d',
-            },
+            orderItems: orderedItems,
+            shop: confirm.order.order.orderItems[0].shop
         };
 
-        axios
-            .post(`${baseUrl}/order`, order)
+        authAxios
+            .post(`/order`, order)
             .then((res) => {
                 console.log(res.data);
             });
@@ -54,8 +58,9 @@ export default function Confirm(props) {
 
     const { total } = useSelector(state => state.userReducer);
 
-
     const confirm = props.route.params;
+
+    // console.log()
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -73,14 +78,12 @@ export default function Confirm(props) {
                                     <Text style={{ color: 'black', fontFamily: 'Raleway-SemiBold' }}>City:</Text>
                                     <Text style={{ color: 'black', fontFamily: 'Raleway-SemiBold' }}>Name:</Text>
                                     <Text style={{ color: 'black', fontFamily: 'Raleway-SemiBold' }}>Phone:</Text>
-                                    <Text style={{ color: 'black', fontFamily: 'Raleway-SemiBold' }}>Date:</Text>
                                 </View>
                                 <View>
                                     <Text>{confirm.order.order.shippingAddress1}</Text>
                                     <Text>{confirm.order.order.city}</Text>
                                     <Text>{confirm.order.order.name}</Text>
                                     <Text>0{confirm.order.order.phone}</Text>
-                                    <Text>{confirm.order.order.dateOrdered}</Text>
                                 </View>
                             </View>
                             <Text style={styles.order}>Items:</Text>
@@ -134,9 +137,14 @@ export default function Confirm(props) {
                         :
                         null
                 }
-                <View style={{ alignItems: 'center', margin: 20 }}>
-                    <Button title={'Place Order'} onPress={() => confirmOrder()} />
-                </View>
+                {
+                    props.route.params ?
+                        <View style={{ alignItems: 'center', margin: 20 }}>
+                            <Button title={'Place Order'} onPress={() => confirmOrder()} />
+                        </View>
+                        :
+                        null
+                }
             </View>
         </ScrollView>
     );
